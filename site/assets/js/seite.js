@@ -156,7 +156,7 @@
 
     // Klebe-Positionen: ein Abschnitt bleibt liegen, bis das nächste Blatt darübergeschoben ist
     function klebe() {
-      $$('.ablauf, .buch').forEach(function (s) { s.style.setProperty('--klebe', Math.min(0, window.innerHeight - s.offsetHeight) + 'px'); });
+      $$('.buch').forEach(function (s) { s.style.setProperty('--klebe', Math.min(0, window.innerHeight - s.offsetHeight) + 'px'); });
     }
     ScrollTrigger.addEventListener('refresh', klebe);
 
@@ -168,10 +168,14 @@
 
     // Leporello: entfaltet sich Feld für Feld, ein Bleistiftstrich verbindet die Schritte
     var falze = $$('.falz');
-    var lep = gsap.timeline({ scrollTrigger: { trigger: '#ablauf-inhalt', start: 'center center', end: '+=1100', scrub: 0.8, pin: true } });
+    // Das Leporello bleibt fixiert, bis das Arbeitsblatt-Blatt ganz darübergeschoben ist (ein Mechanismus, kein Sprung)
+    var AUFFALTEN = 1100;
+    var lep = gsap.timeline({ scrollTrigger: { trigger: '#ablauf-inhalt', start: 'center center',
+      end: function () { return '+=' + (AUFFALTEN + 450 + window.innerHeight * 1.25); }, scrub: 0.8, pin: true, invalidateOnRefresh: true } });
     lep.from('.strich path', { drawSVG: '0%', duration: falze.length, ease: 'none' }, 0)
        .from(falze, { rotationY: function (i) { return i % 2 ? -92 : 92; }, opacity: 0, duration: 1, stagger: 0.85, ease: 'power2.out' }, 0)
        .from('.ablauf .fazit', { opacity: 0, y: 24, duration: 0.8 }, '-=0.3');
+    lep.to({}, { duration: lep.duration() * (450 + window.innerHeight * 1.25) / AUFFALTEN });
 
     // Arbeitsblatt: das Fenster „landet“ wie eine eingeklebte Karte
     gsap.from('#fenster', { rotationX: 56, rotationZ: -4, scale: 0.8, y: 140, transformPerspective: 1600, ease: 'none',
