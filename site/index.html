@@ -235,7 +235,8 @@ p{margin:0}
 .buch .riss{background:var(--sand)}
 .buch .kopfzeile{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:end}
 .buch .kopfzeile p{max-width:46ch;color:#5B3F22}
-.buch h2{color:#2A170A}
+.buch h2{color:#2A170A;font-size:clamp(34px,5vw,84px)}
+.am-stueck{white-space:nowrap}
 .aufschlag{position:relative;margin-top:56px;border-radius:14px;overflow:hidden;box-shadow:0 40px 90px rgba(58,36,20,.35);transform-origin:50% 100%}
 .aufschlag img{width:100%;aspect-ratio:16/9;object-fit:cover}
 .aufschlag .ueber{position:absolute;inset:auto 0 0 0;padding:clamp(20px,4vw,48px);display:flex;flex-wrap:wrap;gap:18px 32px;align-items:end;justify-content:space-between;
@@ -494,7 +495,7 @@ p{margin:0}
   <div class="riss-halter" aria-hidden="true"><div class="riss"></div></div>
   <div class="huelle" id="buch-kopf">
     <div class="kopfzeile">
-      <h2 id="buch-titel">Das große Ägypten-Popup-Buch</h2>
+      <h2 id="buch-titel">Das große <span class="am-stueck">Ägypten-Popup-Buch</span></h2>
       <p>Ein 3D-Buch für Klasse 5/6: blättern, an Laschen ziehen, Figuren antippen. Jede Figur, jede Kulisse und jeder Klang entsteht im Code.</p>
     </div>
     <div class="aufschlag" id="aufschlag">
