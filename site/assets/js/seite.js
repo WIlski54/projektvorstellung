@@ -320,6 +320,7 @@
     });
 
     // Buch: Querfahrt durch die neun Stationen
+    var kulisse = $('#kulisse');
     var karten = $$('article', band), lauf = $('#lauf'), epoche = $('#epoche'), zeit = $('#zeit'), zuletztNr = -1;
     var weite = function () { return Math.max(0, band.scrollWidth - band.parentElement.clientWidth); };
     function stationen() {
@@ -331,6 +332,7 @@
       });
       if (best !== zuletztNr) { zuletztNr = best; epoche.textContent = karten[best].dataset.epoche; zeit.textContent = karten[best].dataset.zeit; }
       var w = weite(); gsap.set(lauf, { scaleX: w ? -x / w : 0 });
+      gsap.set(kulisse, { x: x * 0.35 });
     }
     gsap.to(band, { x: function () { return -weite(); }, ease: 'none', onUpdate: stationen,
       scrollTrigger: { trigger: '#querfahrt', start: 'top top', end: function () { return '+=' + weite(); },
