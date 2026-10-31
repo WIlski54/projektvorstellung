@@ -218,15 +218,14 @@
 
     // Papiertheater: Steuerleiste und die drei Stärken treten wie ins Rampenlicht
     gsap.from('#steuer', { y: 30, opacity: 0, ease: 'none',
-      scrollTrigger: { trigger: '#steuer', start: 'top 96%', end: 'top 78%', scrub: 0.8 } });
+      scrollTrigger: { trigger: '#steuer', pinnedContainer: '#papiertheater', start: 'top 96%', end: 'top 78%', scrub: 0.8 } });
     $$('.theater .drei > div').forEach(function (d, i) {
       var linie = document.createElement('i'); linie.className = 'linie'; linie.setAttribute('aria-hidden', 'true');
       d.insertBefore(linie, d.firstChild);
-      var start = 94 - i * 7, ende = 62 - i * 7;
-      gsap.timeline({ scrollTrigger: { trigger: '.theater .drei', start: 'top ' + start + '%', end: 'top ' + ende + '%', scrub: 0.9 } })
-        .fromTo(linie, { scaleX: 0, opacity: 0.4 }, { scaleX: 1, opacity: 1, duration: 1, ease: 'power2.out' })
-        .from($('h3', d), { y: 46, opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.35)
-        .from($('p', d), { y: 34, opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.55);
+      gsap.timeline({ scrollTrigger: { trigger: d, pinnedContainer: '#papiertheater', start: 'top ' + (100 - i * 6) + '%', end: 'top ' + (48 - i * 6) + '%', scrub: 1.2 } })
+        .fromTo(linie, { scaleX: 0, opacity: 0.3 }, { scaleX: 1, opacity: 1, duration: 1, ease: 'power2.out' }, 0)
+        .fromTo($('h3', d), { y: 90, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'power2.out' }, 0.25)
+        .fromTo($('p', d), { y: 70, opacity: 0, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'power2.out' }, 0.5);
     });
 
     // Buch: Ein Buchdeckel schiebt sich über die Bühne und klappt auf – dahinter stellt sich die Seite auf
@@ -247,7 +246,7 @@
       .from('#aufschlag .ueber > *', { y: 30, opacity: 0, duration: 0.3, stagger: 0.1 }, 1.15);
     $$('#zahlen > div').forEach(function (d, i) {
       gsap.from(d, mische({ ease: 'back.out(1.5)',
-        scrollTrigger: { trigger: '#zahlen', start: 'top ' + (96 - i * 5) + '%', end: 'top ' + (70 - i * 5) + '%', scrub: 0.8 } }, aufklappen));
+        scrollTrigger: { trigger: '#zahlen', pinnedContainer: '#buch-kopf', start: 'top ' + (96 - i * 5) + '%', end: 'top ' + (70 - i * 5) + '%', scrub: 0.8 } }, aufklappen));
     });
     gsap.from('#stationen-titel', mische({ ease: 'back.out(1.5)',
       scrollTrigger: { trigger: '#querfahrt', start: 'top 92%', end: 'top 55%', scrub: 0.8 } }, aufklappen));
@@ -258,7 +257,7 @@
       if (!ziel) return;
       gsap.to(obj, { v: ziel, duration: 1.4, ease: 'power2.out', snap: { v: 1 },
         onUpdate: function () { b.textContent = obj.v; },
-        scrollTrigger: { trigger: '#zahlen', start: 'top 82%', once: true } });
+        scrollTrigger: { trigger: '#zahlen', pinnedContainer: '#buch-kopf', start: 'top 82%', once: true } });
     });
 
     // Buch: Querfahrt durch die neun Stationen
