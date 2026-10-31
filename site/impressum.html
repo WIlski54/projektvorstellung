@@ -12,31 +12,81 @@
 @font-face{font-family:"Atkinson";src:url(assets/fonts/atkinson-hyperlegible-next-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
 body{margin:0;background:#141B33;color:#E8ECF6;font:18px/1.65 "Atkinson",system-ui,sans-serif}
 main{width:min(760px,100% - 40px);margin:0 auto;padding:72px 0 96px}
-h1,h2{font-family:"Bricolage","Arial Narrow",sans-serif;font-stretch:84%;font-weight:760;letter-spacing:-.01em;line-height:1.05}
+.marke{view-transition-name:marke}
+h1,h2,h3{font-family:"Bricolage","Arial Narrow",sans-serif;font-stretch:84%;font-weight:760;letter-spacing:-.01em;line-height:1.05}
 h1{font-size:clamp(40px,6vw,64px);margin:32px 0 32px}
-h2{font-size:30px;margin:56px 0 12px}
-p{margin:0 0 14px;color:#C9D0E6}
+h2{font-size:32px;margin:64px 0 14px}
+h3{font-size:22px;margin:36px 0 8px;font-stretch:92%}
+p,li{color:#C9D0E6}
+p{margin:0 0 14px}
+ul{margin:0 0 14px;padding-left:1.2em}
+address{font-style:normal;color:#E8ECF6;margin:0 0 14px}
 a{color:#E9CB86}
-.platzhalter{background:rgba(233,203,134,.15);border-radius:4px;padding:0 4px}
+.platzhalter{background:rgba(233,203,134,.18);color:#F3DA9F;border-radius:4px;padding:0 5px}
+.leise{font-size:15px;color:#8F98B6}
 :focus-visible{outline:3px solid #E9CB86;outline-offset:3px}
 </style>
 </head>
 <body>
 <main>
-<a href="./">Zurück zur Startseite</a>
+<a class="marke" href="./">Zurück zur Startseite</a>
+
 <h1>Impressum</h1>
 <p>Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG)</p>
-<p>Stephan Wilski<br><span class="platzhalter">[Straße und Hausnummer]</span><br><span class="platzhalter">[PLZ Ort]</span></p>
-<p>E-Mail: <span class="platzhalter">[E-Mail-Adresse]</span></p>
-<p>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV: Stephan Wilski, Anschrift wie oben.</p>
-<p>Diese Seite ist ein privates Projekt. Sie ist kein offizielles Angebot der Gesamtschule Meiderich oder der Stadt Duisburg.</p>
+<address>
+Stephan Wilski<br>
+c/o Gesamtschule Meiderich<br>
+Westender Straße 30–32<br>
+47138 Duisburg
+</address>
 
-<h2 id="datenschutz">Datenschutz</h2>
-<p>Diese Seite setzt keine Cookies, verwendet kein Tracking und lädt keine Inhalte von fremden Servern. Schriften und Bilder liegen auf diesem Server.</p>
-<p>Beim Aufruf speichert der Webserver technisch notwendige Daten (IP-Adresse, Zeitpunkt, aufgerufene Seite, Browser) in Protokolldateien. Sie dienen nur dem sicheren Betrieb und werden nach <span class="platzhalter">[Anzahl]</span> Tagen gelöscht. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.</p>
-<p>Hosting: <span class="platzhalter">[Hoster und Standort, z. B. Hetzner Online GmbH, Rechenzentrum in Deutschland]</span>.</p>
-<p>Das verlinkte Arbeitsblatt (einfachesab.wilski.tech) arbeitet nur mit selbst gewählten Pseudonymen und löscht alle Eingaben vier Stunden nach der letzten Aktivität.</p>
-<p>Du hast das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung sowie ein Beschwerderecht bei der Aufsichtsbehörde (in NRW: Landesbeauftragte für Datenschutz und Informationsfreiheit).</p>
+<h3>Kontakt</h3>
+<p>Telefon: 0203 283-7626 (Sekretariat der Gesamtschule Meiderich)<br>
+E-Mail: <span class="platzhalter">[E-Mail-Adresse]</span></p>
+
+<h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3>
+<p>Stephan Wilski, Anschrift wie oben</p>
+
+<h3>Hinweis</h3>
+<p>Diese Seite stellt Unterrichtsprojekte von Stephan Wilski, Lehrkraft an der Gesamtschule Meiderich, vor. Sie ist kein offizielles Angebot der Schule oder des Schulträgers, der Stadt Duisburg.</p>
+
+<h3>Haftung für Links</h3>
+<p>Diese Seite verlinkt auf eigene Anwendungen unter wilski.tech. Für Inhalte externer Seiten, auf die verlinkt wird, sind deren Betreiber verantwortlich. Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar; bei Bekanntwerden werden entsprechende Links umgehend entfernt.</p>
+
+<h2 id="datenschutz">Datenschutzerklärung</h2>
+
+<h3>Verantwortlicher</h3>
+<p>Stephan Wilski, c/o Gesamtschule Meiderich, Westender Straße 30–32, 47138 Duisburg<br>
+E-Mail: <span class="platzhalter">[E-Mail-Adresse]</span></p>
+
+<h3>Das Wichtigste vorab</h3>
+<p>Diese Seite setzt keine Cookies, verwendet kein Tracking und keine Analysewerkzeuge und lädt keine Inhalte von fremden Servern. Schriften, Bilder und Skripte liegen auf diesem Server. Es gibt keine Formulare; es werden keine Daten aktiv von dir abgefragt.</p>
+
+<h3>Hosting und Server-Protokolle</h3>
+<p>Die Seite liegt auf einem Server der <span class="platzhalter">[Hetzner Online GmbH, Industriestr. 25, 91710 Gunzenhausen; Rechenzentrum in Falkenstein / Nürnberg / Helsinki]</span>. Mit dem Hoster besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO.</p>
+<p>Bei jedem Aufruf speichert der Webserver automatisch:</p>
+<ul>
+  <li>IP-Adresse des anfragenden Geräts</li>
+  <li>Datum und Uhrzeit des Zugriffs</li>
+  <li>aufgerufene Datei bzw. Seite und übertragene Datenmenge</li>
+  <li>Browser und Betriebssystem (User-Agent) sowie die zuvor besuchte Seite (Referrer)</li>
+</ul>
+<p>Zweck ist der sichere und stabile Betrieb, etwa die Abwehr von Angriffen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO; das berechtigte Interesse liegt im sicheren Betrieb der Seite. Die Protokolle werden nach <span class="platzhalter">[7]</span> Tagen gelöscht.</p>
+
+<h3><span class="platzhalter">[Nur falls der Cloudflare-Proxy aktiv ist:]</span> Cloudflare</h3>
+<p>Zum Schutz vor Angriffen und zur schnelleren Auslieferung läuft der Datenverkehr über das Netzwerk der Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA. Dabei verarbeitet Cloudflare die oben genannten Verbindungsdaten, insbesondere die IP-Adresse. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Cloudflare ist unter dem EU-US Data Privacy Framework zertifiziert; die Übermittlung in die USA stützt sich auf den Angemessenheitsbeschluss der EU-Kommission. Weitere Informationen: <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">cloudflare.com/privacypolicy</a></p>
+
+<h3>Das große Ägypten-Popup-Buch</h3>
+<p>Das Buch läuft vollständig in deinem Browser. Es speichert nur auf deinem Gerät (localStorage) Einstellungen wie Ton, Lautstärke, Untertitel und Ruhigen Modus sowie die gefundenen Sonnenkäfer. Diese Daten verlassen dein Gerät nicht und lassen sich über die Browser-Einstellungen löschen.</p>
+
+<h3>Verlinkte Anwendung: Einfaches digitales Arbeitsblatt</h3>
+<p>Die verlinkte Live-Version (einfachesab.wilski.tech) ist eine eigenständige Anwendung. Die Anmeldung erfolgt nur mit einem selbst gewählten Pseudonym; Eingaben werden vier Stunden nach der letzten Aktivität automatisch gelöscht. Bitte gib dort keine echten Namen oder persönlichen Daten ein.</p>
+
+<h3>Deine Rechte</h3>
+<p>Du hast nach der DSGVO das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch gegen Verarbeitungen auf Grundlage von Art. 6 Abs. 1 lit. f (Art. 21). Wende dich dazu an die oben genannte E-Mail-Adresse.</p>
+<p>Außerdem hast du das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren. Zuständig ist: Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen, Kavalleriestraße 2–4, 40213 Düsseldorf.</p>
+
+<p class="leise">Stand: <span class="platzhalter">[Monat Jahr]</span></p>
 </main>
 </body>
 </html>
