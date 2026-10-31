@@ -7,7 +7,9 @@
 <meta name="description" content="Einfaches digitales Arbeitsblatt, Papiertheater und 3D-Popup-Buch: drei Unterrichtsmedien, gebaut mit KI-Bauplänen an der Gesamtschule Meiderich.">
 <meta name="theme-color" content="#141B33">
 <link rel="preload" href="assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/js/lenis.css">
 <style>
+@view-transition{navigation:auto}
 @font-face{font-family:"Bricolage";src:url(assets/fonts/bricolage.woff2) format("woff2");font-weight:200 800;font-stretch:75% 100%;font-display:swap}
 @font-face{font-family:"Atkinson";src:url(assets/fonts/atkinson-hyperlegible-next-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"Atkinson";src:url(assets/fonts/atkinson-hyperlegible-next-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
@@ -18,13 +20,14 @@
   --karo:#FBFBF8; --karo-linie:#DCE3EE; --tinte:#2443C9; --tinte-hell:#8FA6FF;
   --vorhang:#B8322B; --vorhang-dunkel:#7E1D1A;
   --sand:#E9CB86; --sand-dunkel:#C99A3B; --nil:#155E68; --erde:#3A2414;
-  --kraft:#C79E6D;
+  --kraft:#C79E6D; --buehne:#0F1428;
   --display:"Bricolage", "Arial Narrow", system-ui, sans-serif;
   --text:"Atkinson", system-ui, -apple-system, "Segoe UI", sans-serif;
   --breite:1240px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+html.lenis{scroll-behavior:auto}
 body{margin:0;background:var(--nacht);color:var(--nacht-text);font-family:var(--text);font-size:clamp(17px,1.05vw + 10px,20px);line-height:1.6;-webkit-font-smoothing:antialiased}
 img{display:block;max-width:100%;height:auto}
 a{color:inherit}
@@ -34,11 +37,18 @@ h1,h2,h3{font-family:var(--display);font-weight:760;line-height:.98;letter-spaci
 h2{font-size:clamp(44px,6.2vw,96px)}
 h3{font-size:clamp(24px,1.6vw + 12px,32px);font-stretch:92%;letter-spacing:-.01em;line-height:1.1}
 p{margin:0}
-.leise{color:var(--nacht-leise)}
 .knopf{display:inline-flex;align-items:center;gap:.6em;font:700 1rem/1 var(--text);padding:1em 1.4em;border-radius:999px;border:2px solid currentColor;background:transparent;color:inherit;cursor:pointer;text-decoration:none;transition:background .2s,color .2s}
 .knopf.voll{background:var(--sand);border-color:var(--sand);color:var(--erde)}
 .knopf.voll:hover{background:#F3DA9F}
 .knopf:not(.voll):hover{background:rgba(255,255,255,.08)}
+.marke{view-transition-name:marke}
+
+/* ---------- Blätter: jeder Abschnitt ist ein Bogen Papier ---------- */
+.blatt{position:relative}
+.riss{position:absolute;left:0;right:0;top:-26px;height:28px;background:inherit;pointer-events:none;
+  clip-path:polygon(0 60%,4% 35%,9% 55%,14% 22%,20% 48%,26% 30%,31% 58%,37% 26%,43% 50%,49% 20%,55% 46%,61% 28%,67% 56%,73% 24%,79% 50%,85% 30%,91% 54%,96% 26%,100% 44%,100% 100%,0 100%)}
+.riss-halter{position:absolute;left:0;right:0;top:0;height:0;filter:drop-shadow(0 -8px 10px rgba(4,6,16,.28));z-index:1}
+.abdunkeln{position:absolute;inset:0;background:#05070F;opacity:0;pointer-events:none;z-index:6}
 
 /* ---------- Kopf ---------- */
 .kopf{position:absolute;inset:0 0 auto 0;z-index:5}
@@ -49,22 +59,24 @@ p{margin:0}
 .kopf nav a{text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
 .kopf nav a:hover{border-color:currentColor}
 
-/* ---------- Bühne (Hero) ---------- */
-.hero{position:relative;min-height:100svh;padding:clamp(120px,15vh,150px) 0 clamp(48px,7vh,80px);overflow:hidden;display:flex;
+/* ---------- Hero ---------- */
+.hero{min-height:100svh;padding:clamp(120px,15vh,150px) 0 clamp(48px,7vh,80px);overflow:hidden;display:flex;z-index:1;
   background:radial-gradient(120% 70% at 50% 110%, #2A3561 0%, var(--nacht) 60%)}
 .hero .huelle{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:clamp(24px,4vw,64px);align-items:center}
 .hero h1{font-size:clamp(50px,5.3vw,92px);font-weight:780;font-stretch:76%}
+.hero h1 .wort{display:inline-block;perspective:700px}
+.hero h1 .zeichen{display:inline-block;transform-origin:50% 100%;backface-visibility:hidden}
 .hero .unter{margin-top:28px;max-width:44ch;font-size:clamp(18px,1.2vw + 10px,23px);color:var(--nacht-leise)}
 .hero .aktionen{margin-top:36px;display:flex;flex-wrap:wrap;gap:14px}
 .tisch{position:relative;height:clamp(320px,36vw,560px);perspective:1400px;perspective-origin:50% -20%}
 .tisch::before{content:"";position:absolute;left:4%;right:4%;bottom:-6%;height:22%;background:radial-gradient(50% 50% at 50% 50%,rgba(3,6,18,.55),rgba(3,6,18,0));pointer-events:none}
-.buehne{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
-.klappe{position:absolute;bottom:0;transform-origin:50% 100%;transform-style:preserve-3d;
+.buehne{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:50% 100%}
+.klappe{position:absolute;bottom:0;transform-origin:50% 100%;
   background:#fff;padding:10px;border-radius:6px;box-shadow:0 30px 60px rgba(5,8,20,.55),0 2px 0 rgba(255,255,255,.4) inset;
-  transform:rotateX(var(--auf,0deg)) rotateZ(var(--dreh,0deg));text-decoration:none;color:var(--erde)}
+  transform:rotate(var(--dreh,0deg));text-decoration:none;color:var(--erde)}
 .klappe img{border-radius:3px;aspect-ratio:16/10;object-fit:cover;width:100%}
-.klappe .zettel{position:absolute;left:14px;bottom:-16px;background:var(--karo);font-family:var(--display);font-weight:700;font-stretch:88%;font-size:clamp(15px,1.2vw,19px);padding:8px 14px;border-radius:3px;box-shadow:0 6px 14px rgba(0,0,0,.25);transform:rotate(-2deg)}
-.klebeband{position:absolute;top:-14px;left:50%;width:110px;height:30px;margin-left:-55px;background:rgba(199,158,109,.82);
+.zettel{position:absolute;left:14px;bottom:-16px;background:var(--karo);color:var(--erde);font-family:var(--display);font-weight:700;font-stretch:88%;font-size:clamp(15px,1.2vw,19px);padding:8px 14px;border-radius:3px;box-shadow:0 6px 14px rgba(0,0,0,.25);transform:rotate(-2deg);line-height:1.2}
+.klebeband{position:absolute;top:-14px;left:50%;width:110px;height:30px;margin-left:-55px;background:rgba(199,158,109,.82);z-index:2;
   transform:rotate(-3deg);box-shadow:0 1px 2px rgba(0,0,0,.2);clip-path:polygon(3% 0,97% 4%,100% 50%,96% 100%,2% 96%,0 50%)}
 .klappe.k1{left:0;width:54%;--dreh:-4deg;z-index:1;bottom:30%}
 .klappe.k3{right:0;width:54%;--dreh:3deg;z-index:2;bottom:34%}
@@ -72,17 +84,15 @@ p{margin:0}
 .klappe.k1 .zettel{bottom:auto;top:-18px}
 .klappe.k3 .zettel{left:auto;right:14px;bottom:auto;top:-18px;transform:rotate(2deg)}
 .klappe.k2 .zettel{left:50%;transform:translateX(-50%) rotate(-1.5deg)}
-.js .klappe{--auf:86deg}
-.js .klappe.oben{animation:aufklappen 1.15s cubic-bezier(.25,1.45,.45,1) forwards}
-.js .klappe.k1.oben{animation-delay:.25s}.js .klappe.k2.oben{animation-delay:.45s}.js .klappe.k3.oben{animation-delay:.65s}
-@keyframes aufklappen{from{--auf:86deg;transform:rotateX(86deg) rotateZ(var(--dreh))}to{transform:rotateX(0deg) rotateZ(var(--dreh))}}
 
 /* ---------- Ablauf: Leporello ---------- */
-.ablauf{background:var(--nacht);padding:clamp(96px,12vw,160px) 0}
+.ablauf{background:var(--nacht);padding:clamp(96px,12vw,160px) 0;z-index:2}
 .ablauf .kopfzeile{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end}
 .ablauf .kopfzeile p{max-width:46ch;color:var(--nacht-leise)}
-.leporello{margin-top:64px;display:grid;grid-template-columns:repeat(4,1fr);perspective:1800px}
-.falz{position:relative;padding:36px 30px 40px;min-height:300px;color:var(--erde);transform-style:preserve-3d}
+.strich{display:block;width:100%;height:56px;margin-top:40px;overflow:visible}
+.strich path{fill:none;stroke:var(--sand);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.leporello{margin:8px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(4,1fr);perspective:1800px}
+.falz{position:relative;padding:36px 30px 40px;min-height:300px;color:var(--erde);transform-style:preserve-3d;backface-visibility:hidden}
 .falz:nth-child(odd){background:#F2EFE7;transform:rotateY(9deg);transform-origin:right center}
 .falz:nth-child(even){background:#E2DDD1;transform:rotateY(-9deg);transform-origin:left center}
 .falz .nr{font-family:var(--display);font-weight:800;font-stretch:75%;font-size:clamp(64px,7vw,104px);line-height:.8;color:rgba(58,36,20,.16)}
@@ -94,31 +104,40 @@ p{margin:0}
 .skills code{font:700 15px/1 var(--text);padding:10px 14px;border-radius:999px;color:var(--erde)}
 
 /* ---------- Arbeitsblatt ---------- */
-.ab{position:relative;background-color:var(--karo);color:#1A2236;
+.ab{background-color:var(--karo);color:#1A2236;z-index:3;
   background-image:linear-gradient(var(--karo-linie) 1px,transparent 1px),linear-gradient(90deg,var(--karo-linie) 1px,transparent 1px);
   background-size:22px 22px;padding:clamp(96px,11vw,150px) 0}
-.ab::before{content:"";display:none;position:absolute;left:clamp(10px,2.4vw,34px);top:0;bottom:0;width:22px;
-  background:radial-gradient(circle at 50% 50%,var(--nacht) 0 9px,transparent 10px) 0 30%/22px 22px no-repeat,
-             radial-gradient(circle at 50% 50%,var(--nacht) 0 9px,transparent 10px) 0 70%/22px 22px no-repeat}
+.ab .riss{background:var(--karo)}
+.ab .lochung{position:absolute;left:clamp(10px,2.4vw,34px);top:0;bottom:0;width:22px;display:none;
+  background:radial-gradient(circle at 50% 50%,var(--nacht) 0 9px,transparent 10px) 0 22%/22px 22px no-repeat,
+             radial-gradient(circle at 50% 50%,var(--nacht) 0 9px,transparent 10px) 0 60%/22px 22px no-repeat}
 .ab .rand{position:absolute;left:clamp(56px,4.6vw,74px);top:0;bottom:0;width:2px;background:#E6A0A0;opacity:.7;display:none}
-@media (min-width:1360px){.ab .rand{display:block}.ab::before{display:block}}
+@media (min-width:1360px){.ab .rand,.ab .lochung{display:block}}
 .ab h2{color:#141B33}
 .ab .einleitung{margin-top:24px;max-width:52ch;font-size:1.1em;color:#3A4560}
 .ab-raster{margin-top:56px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:clamp(28px,4vw,64px);align-items:start}
 .reiter{display:flex;flex-direction:column;gap:6px}
-.reiter button{all:unset;cursor:pointer;display:block;padding:18px 20px 18px 22px;border-left:4px solid transparent;border-radius:0 10px 10px 0;transition:background .2s,border-color .2s}
+.reiter button{all:unset;cursor:pointer;display:block;padding:18px 20px 18px 22px;border-left:4px solid transparent;border-radius:0 10px 10px 0;transition:background .3s,border-color .3s,opacity .3s}
 .reiter button strong{display:block;font-family:var(--display);font-weight:720;font-stretch:90%;font-size:clamp(21px,1.3vw + 8px,26px);line-height:1.15;color:#141B33}
 .reiter button span{display:block;margin-top:6px;color:#4A5570;font-size:.95em}
 .reiter button[aria-selected="true"]{background:#fff;border-color:var(--tinte);box-shadow:0 10px 30px rgba(20,27,51,.08)}
 .reiter button:hover:not([aria-selected="true"]){background:rgba(255,255,255,.6)}
 .reiter button:focus-visible{outline:3px solid var(--tinte);outline-offset:2px}
-.fenster{background:#fff;border-radius:14px;box-shadow:0 40px 80px rgba(20,27,51,.18),0 0 0 1px #D7DDE8;overflow:hidden}
+.fenster-halter{position:relative}
+.fenster{position:relative;background:#fff;border-radius:14px;box-shadow:0 40px 80px rgba(20,27,51,.18),0 0 0 1px #D7DDE8;overflow:hidden;transform-origin:50% 100%}
+.fenster .klebeband{top:-6px;opacity:0}
 .fenster .leiste{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#EEF1F6;border-bottom:1px solid #D7DDE8;font-size:14px;color:#55607A}
 .fenster .leiste i{width:11px;height:11px;border-radius:50%;background:#C9D0DD}
 .fenster .leiste b{margin-left:10px;font-weight:400;background:#fff;padding:4px 12px;border-radius:6px;flex:1;max-width:340px}
-.fenster figure{margin:0;display:none}
-.fenster figure.aktiv{display:block}
-.fenster figcaption{padding:14px 18px;font-size:15px;color:#55607A;border-top:1px solid #E6EAF1}
+.ansichten{position:relative;aspect-ratio:16/10;overflow:hidden;background:#fff}
+.ansichten figure{position:absolute;inset:0;margin:0;opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s}
+.ansichten figure.aktiv{opacity:1;visibility:visible}
+.ansichten figure img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.ansichten #p-hilfe{background:#fff;display:grid;place-items:center}
+.ansichten #p-hilfe .bild{position:relative;width:94%}
+.ansichten #p-hilfe img{height:auto;object-fit:contain}
+.kommentar-deckel{position:absolute;left:81.4%;top:47%;width:18.6%;height:48%;background:#fff;transform-origin:50% 100%;transform:scaleY(0)}
+.fenster figcaption{position:relative;padding:14px 18px;font-size:15px;color:#55607A;border-top:1px solid #E6EAF1;background:#fff;min-height:3.4em}
 .ab .fakten{margin-top:72px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
 .ab .fakten h3{font-size:clamp(21px,1.2vw + 10px,25px)}
 .ab .fakten p{margin-top:8px;color:#3A4560}
@@ -127,80 +146,122 @@ p{margin:0}
 .ab .zum-live p{color:#4A5570;font-size:.95em;max-width:52ch}
 
 /* ---------- Papiertheater ---------- */
-.theater{background:#0F1428;padding:clamp(96px,11vw,150px) 0}
+.theater{background:var(--buehne);padding:clamp(96px,11vw,150px) 0;z-index:4}
 .theater .kopfzeile{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:end}
 .theater .kopfzeile p{color:var(--nacht-leise);max-width:46ch}
 .portal{position:relative;margin-top:56px;padding:clamp(14px,2vw,26px);border-radius:10px;
   background:linear-gradient(180deg,#8E5B2C,#5F3B1B);box-shadow:0 50px 100px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.18)}
 .guckkasten{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:4px;background:#000}
-.guckkasten img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s ease}
-.guckkasten img.aktiv{opacity:1}
-.vorhang{position:absolute;top:0;bottom:0;width:51%;z-index:2;transition:transform 1.6s cubic-bezier(.65,0,.25,1);
-  background:repeating-linear-gradient(90deg,var(--vorhang-dunkel) 0 6px,var(--vorhang) 18px 40px,var(--vorhang-dunkel) 52px 58px),var(--vorhang);
-  box-shadow:inset 0 -60px 80px rgba(0,0,0,.35)}
-.vorhang.links{left:0;transform-origin:left}
-.vorhang.rechts{right:0;transform-origin:right}
-.offen .vorhang.links{transform:translateX(-96%) scaleX(.55)}
-.offen .vorhang.rechts{transform:translateX(96%) scaleX(.55)}
+.guckkasten img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.1s ease;transform-origin:var(--kb,50% 50%)}
+.guckkasten img.aktiv{opacity:1;animation:kamerafahrt 9s ease-out forwards}
+@keyframes kamerafahrt{from{transform:scale(1)}to{transform:scale(1.08)}}
 .volant{position:absolute;left:0;right:0;top:0;height:9%;z-index:3;
   background:radial-gradient(circle at 50% 0,var(--vorhang) 0 62%,transparent 64%) 0 0/60px 100% repeat-x;filter:drop-shadow(0 6px 6px rgba(0,0,0,.4))}
-.start{position:absolute;inset:0;z-index:4;display:grid;place-items:center;transition:opacity .4s}
-.offen .start{opacity:0;pointer-events:none}
-.untertitel{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);z-index:3;max-width:80%;text-align:center;
-  font-size:clamp(14px,1.3vw,20px);line-height:1.35;background:rgba(10,12,22,.78);color:#fff;padding:.5em .9em;border-radius:6px;opacity:0;transition:opacity .4s}
-.offen .untertitel{opacity:1}
+.seitenvorhang{position:absolute;top:0;bottom:0;width:6%;z-index:2;background:repeating-linear-gradient(90deg,var(--vorhang-dunkel) 0 5px,var(--vorhang) 12px 22px,var(--vorhang-dunkel) 30px 34px);box-shadow:0 0 30px rgba(0,0,0,.5)}
+.seitenvorhang.links{left:0;border-radius:0 0 60% 0}
+.seitenvorhang.rechts{right:0;border-radius:0 0 0 60%}
+.untertitel{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);z-index:3;max-width:78%;text-align:center;
+  font-size:clamp(14px,1.3vw,20px);line-height:1.35;background:rgba(10,12,22,.78);color:#fff;padding:.5em .9em;border-radius:6px}
+.untertitel:empty{display:none}
 .steuer{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.steuer .links{display:flex;gap:18px;align-items:center}
+.abspielen{all:unset;cursor:pointer;width:44px;height:44px;border-radius:50%;border:2px solid #F08A6E;display:grid;place-items:center;color:#F08A6E}
+.abspielen:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .szenen{display:flex;gap:8px}
-.szenen button{all:unset;cursor:pointer;width:34px;height:8px;border-radius:4px;background:rgba(255,255,255,.22)}
-.szenen button[aria-current="true"]{background:#F08A6E}
+.szenen button{all:unset;cursor:pointer;width:34px;height:8px;border-radius:4px;background:rgba(255,255,255,.22);position:relative;overflow:hidden}
+.szenen button[aria-current="true"]{background:rgba(240,138,110,.35)}
+.szenen button[aria-current="true"]::after{content:"";position:absolute;inset:0;background:#F08A6E;transform-origin:left;animation:szenenlauf var(--dauer,4.2s) linear forwards}
+.pausiert .szenen button[aria-current="true"]::after{animation-play-state:paused}
+@keyframes szenenlauf{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .szenen button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .theater .hinweis{font-size:15px;color:var(--nacht-leise)}
 .theater .drei{margin-top:72px;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
 .theater .drei div{border-top:3px solid #F08A6E;padding-top:22px}
 .theater .drei p{margin-top:10px;color:var(--nacht-leise)}
 
+/* Vorhang als Übergang (nur mit Animation) */
+.blende{position:fixed;inset:0;z-index:60;pointer-events:none;display:none}
+.anim .blende{display:block}
+.blende .bahn{position:absolute;top:0;bottom:0;width:50.5%;
+  background:repeating-linear-gradient(90deg,var(--vorhang-dunkel) 0 8px,var(--vorhang) 22px 46px,var(--vorhang-dunkel) 60px 68px),var(--vorhang);
+  box-shadow:inset 0 -120px 140px rgba(0,0,0,.4),0 0 60px rgba(0,0,0,.6)}
+.blende .bahn.l{left:0}
+.blende .bahn.r{right:0}
+.blende .schabracke{position:absolute;left:0;right:0;top:0;height:13vh;
+  background:radial-gradient(circle at 50% 0,#A52A24 0 62%,transparent 64%) 0 0/90px 100% repeat-x,linear-gradient(#8E201C,#8E201C) 0 0/100% 60% no-repeat;filter:drop-shadow(0 10px 10px rgba(0,0,0,.45))}
+.blende .titel{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:780;font-stretch:76%;font-size:clamp(48px,7vw,120px);color:#F6E3C6;opacity:0;text-shadow:0 4px 30px rgba(0,0,0,.45)}
+
 /* ---------- Popup-Buch ---------- */
-.buch{background:var(--sand);color:var(--erde);padding:clamp(96px,11vw,150px) 0 clamp(80px,9vw,130px);overflow:hidden}
+.buch{background:var(--sand);color:var(--erde);padding:clamp(96px,11vw,150px) 0 clamp(80px,9vw,130px);z-index:5}
+.buch .riss{background:var(--sand)}
 .buch .kopfzeile{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:end}
 .buch .kopfzeile p{max-width:46ch;color:#5B3F22}
 .buch h2{color:#2A170A}
-.aufschlag{position:relative;margin-top:56px;border-radius:14px;overflow:hidden;box-shadow:0 40px 90px rgba(58,36,20,.35)}
+.aufschlag{position:relative;margin-top:56px;border-radius:14px;overflow:hidden;box-shadow:0 40px 90px rgba(58,36,20,.35);transform-origin:50% 100%}
 .aufschlag img{width:100%;aspect-ratio:16/9;object-fit:cover}
 .aufschlag .ueber{position:absolute;inset:auto 0 0 0;padding:clamp(20px,4vw,48px);display:flex;flex-wrap:wrap;gap:18px 32px;align-items:end;justify-content:space-between;
   background:linear-gradient(180deg,rgba(26,12,7,0),rgba(26,12,7,.88) 55%);color:#F6E9CF}
 .aufschlag .ueber p{max-width:40ch}
 .zahlen{margin-top:56px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
-.zahlen b{display:block;font-family:var(--display);font-weight:800;font-stretch:76%;font-size:clamp(56px,6vw,92px);line-height:.9;color:var(--nil)}
+.zahlen b{display:block;font-family:var(--display);font-weight:800;font-stretch:76%;font-size:clamp(56px,6vw,92px);line-height:.9;color:var(--nil);font-variant-numeric:tabular-nums}
 .zahlen span{display:block;margin-top:8px;color:#5B3F22}
-.stationen{margin-top:72px}
+.querfahrt{margin-top:72px;overflow:hidden}
 .stationen .titelzeile{display:flex;justify-content:space-between;align-items:end;gap:20px}
 .stationen .pfeile{display:flex;gap:10px}
 .stationen .pfeile button{all:unset;cursor:pointer;width:48px;height:48px;border-radius:50%;border:2px solid var(--erde);display:grid;place-items:center}
 .stationen .pfeile button:hover{background:rgba(58,36,20,.08)}
 .stationen .pfeile button:focus-visible{outline:3px solid var(--nil);outline-offset:2px}
-.band{margin-top:28px;display:grid;grid-auto-flow:column;grid-auto-columns:min(420px,78vw);gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 6px 26px;scrollbar-width:thin}
-.band article{scroll-snap-align:start;background:#FFF8E8;border-radius:10px;padding:10px 10px 18px;box-shadow:0 14px 30px rgba(58,36,20,.16)}
+.band{margin-top:28px;display:grid;grid-auto-flow:column;grid-auto-columns:min(420px,78vw);gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 6px 26px;scrollbar-width:thin;perspective:1600px}
+.band article{scroll-snap-align:start;background:#FFF8E8;border-radius:10px;padding:10px 10px 18px;box-shadow:0 14px 30px rgba(58,36,20,.16);transform-origin:50% 100%}
 .band img{border-radius:6px;aspect-ratio:16/9;object-fit:cover;width:100%}
 .band h3{margin:14px 8px 0;font-size:22px}
 .band p{margin:4px 8px 0;font-size:15px;color:#6B4E2E}
 .band .nr{font-family:var(--display);font-weight:800;color:var(--nil);margin-right:.35em}
+.zeitleiste{display:none}
+.anim .fuss{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.anim .band{padding-inline:calc((min(var(--breite),100vw - 2*clamp(20px,5vw,64px)) - min(30vw,460px)) / 2)}
 
-.leser{position:fixed;inset:0;z-index:50;background:rgba(10,6,4,.92);display:none;flex-direction:column}
+.leser{position:fixed;inset:0;z-index:80;background:rgba(10,6,4,.92);display:none;flex-direction:column}
 .leser.offen{display:flex}
 .leser .oben{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 18px;color:#F6E9CF}
 .leser iframe{flex:1;border:0;width:100%;background:#1a0c07}
 
 /* ---------- Fuß ---------- */
-.fuss{background:var(--nacht);padding:96px 0 48px}
+.fuss{background:var(--nacht);padding:96px 0 48px;z-index:6}
 .fuss .gross{font-family:var(--display);font-weight:760;font-stretch:80%;font-size:clamp(36px,5vw,72px);line-height:1;letter-spacing:-.02em;max-width:18ch}
 .fuss .zeile{margin-top:64px;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;font-size:15px;color:var(--nacht-leise)}
 .fuss nav{display:flex;gap:24px}
+
+/* ---------- Animationsmodus (Desktop, Bewegung erlaubt) ---------- */
+.anim .hero{position:sticky;top:0}
+.anim .ablauf{position:sticky;top:var(--klebe,0px)}
+.anim .buch{position:sticky;top:var(--klebe,0px)}
+/* Arbeitsblatt als Scroll-Geschichte */
+.anim .ab-raster{align-items:stretch}
+.anim .reiter{gap:0}
+.anim .reiter button{min-height:72vh;display:flex;flex-direction:column;justify-content:center;border-radius:0 12px 12px 0;opacity:.45;background:transparent;box-shadow:none}
+.anim .reiter button[aria-selected="true"]{opacity:1;background:transparent;box-shadow:none}
+.anim .reiter button:hover:not([aria-selected="true"]){background:transparent;opacity:.7}
+.anim .reiter button strong{font-size:clamp(26px,1.6vw + 8px,34px)}
+.anim .fenster-halter{position:sticky;top:15vh;align-self:start}
+.anim .fenster .klebeband{opacity:1}
+/* Buch: Querfahrt */
+.anim .querfahrt{height:100vh;display:flex;flex-direction:column;justify-content:center;margin-top:24px}
+.anim .band{display:flex;overflow:visible;scroll-snap-type:none;padding:30px 0 30px;gap:28px;will-change:transform}
+.anim .band article{flex:0 0 min(30vw,460px)}
+.anim .stationen .pfeile{display:none}
+.anim .zeitleiste{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;margin-top:8px}
+.zeitleiste .spur{height:4px;border-radius:2px;background:rgba(58,36,20,.18);position:relative;overflow:hidden}
+.zeitleiste .lauf{position:absolute;inset:0;background:var(--nil);transform-origin:left;transform:scaleX(0)}
+.zeitleiste b{font-family:var(--display);font-weight:760;font-stretch:84%;font-size:22px;color:#2A170A;min-width:14ch}
+.zeitleiste span{color:#6B4E2E;font-size:16px;text-align:right;min-width:20ch}
 
 /* ---------- Responsiv ---------- */
 @media (max-width:900px){
   .kopf nav{display:none}
   .ablauf .kopfzeile,.theater .kopfzeile,.buch .kopfzeile{grid-template-columns:1fr}
   .leporello{grid-template-columns:1fr 1fr;row-gap:12px}
+  .strich{display:none}
   .ab-raster{grid-template-columns:1fr}
   .reiter{flex-direction:row;overflow-x:auto}
   .reiter button{min-width:220px;border-left:0;border-bottom:4px solid transparent;border-radius:10px 10px 0 0}
@@ -213,14 +274,15 @@ p{margin:0}
 @media (max-width:560px){
   .leporello{grid-template-columns:1fr}
   .falz{min-height:0}
-  .aufschlag .ueber{position:static;background:#2A170A}
   .falz:nth-child(n){transform:none}
-  .klappe .zettel{font-size:13px;padding:5px 9px}
+  .zettel{font-size:13px;padding:5px 9px}
+  .aufschlag .ueber{position:static;background:#2A170A}
+  .untertitel{font-size:12px;max-width:92%;bottom:3%;padding:.35em .6em}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .js .klappe,.js .klappe.oben{--auf:0deg;animation:none;transform:rotateZ(var(--dreh))}
-  .vorhang,.guckkasten img,.buehne{transition:none}
+  .guckkasten img.aktiv{animation:none}
+  .szenen button[aria-current="true"]::after{animation:none;transform:scaleX(1)}
 }
 </style>
 </head>
@@ -238,17 +300,17 @@ p{margin:0}
 </header>
 
 <main id="start">
-<section class="hero">
+<section class="hero blatt" id="hero">
   <div class="huelle">
     <div class="hero-text">
-    <h1>Drei Werkzeuge,<br> ein Bauprinzip</h1>
-    <p class="unter">Unterrichtsmedien zum Arbeiten, Zuschauen und Anfassen. Jedes entsteht mit einem KI-Bauplan – und ist in der Gesamtschule Meiderich im Einsatz.</p>
-    <div class="aktionen">
-      <a class="knopf voll" href="#arbeitsblatt">Projekte ansehen</a>
-      <a class="knopf" href="#ablauf">So entstehen sie</a>
+      <h1 id="titel">Drei Werkzeuge,<br> ein Bauprinzip</h1>
+      <p class="unter">Unterrichtsmedien zum Arbeiten, Zuschauen und Anfassen. Jedes entsteht mit einem KI-Bauplan – und ist in der Gesamtschule Meiderich im Einsatz.</p>
+      <div class="aktionen">
+        <a class="knopf voll" href="#arbeitsblatt">Projekte ansehen</a>
+        <a class="knopf" href="#ablauf">So entstehen sie</a>
+      </div>
     </div>
-    </div>
-    <div class="tisch" aria-hidden="false">
+    <div class="tisch">
       <div class="buehne" id="buehne">
         <a class="klappe k1" href="#arbeitsblatt"><span class="klebeband"></span><img src="assets/img/ab-dashboard.webp" alt="Lehrer-Dashboard des einfachen digitalen Arbeitsblatts" width="1600" height="1000"><span class="zettel">Arbeitsblatt</span></a>
         <a class="klappe k2" href="#popup-buch"><span class="klebeband"></span><img src="assets/img/buch-hero.webp" alt="Das große Ägypten-Popup-Buch, aufgeschlagen" width="2400" height="1350"><span class="zettel">Popup-Buch</span></a>
@@ -256,15 +318,18 @@ p{margin:0}
       </div>
     </div>
   </div>
+  <div class="abdunkeln" aria-hidden="true"></div>
 </section>
 
-<section class="ablauf" id="ablauf">
-  <div class="huelle">
+<section class="ablauf blatt" id="ablauf">
+  <div class="riss-halter" aria-hidden="true"><div class="riss" style="background:var(--nacht)"></div></div>
+  <div class="huelle" id="ablauf-inhalt">
     <div class="kopfzeile">
       <h2>So entsteht jedes Projekt</h2>
       <p>Ich bringe Thema und Didaktik mit. Ein Skill – ein gespeicherter Bauplan für die KI – bringt Gestaltung, Technik und Prüfregeln mit.</p>
     </div>
-    <ol class="leporello" role="list" style="list-style:none;padding:0;margin-top:64px">
+    <svg class="strich" viewBox="0 0 1000 56" preserveAspectRatio="none" aria-hidden="true"><path id="strichpfad" d="M6 34 C 70 10, 120 50, 190 30 S 300 8, 375 30 S 500 52, 560 28 S 690 6, 760 30 S 880 50, 994 24"/></svg>
+    <ol class="leporello">
       <li class="falz"><div class="nr" aria-hidden="true">1</div><h3>Thema nennen</h3><p>Thema, Jahrgang und Wünsche – meist in einem Satz.</p></li>
       <li class="falz"><div class="nr" aria-hidden="true">2</div><h3>Bauplan laden</h3><p>Der Skill legt Stil, Technik und Qualitätsregeln fest. Nichts wird neu erfunden.</p></li>
       <li class="falz"><div class="nr" aria-hidden="true">3</div><h3>Entwurf freigeben</h3><p>Drehbuch, Kapitelübersicht oder Aufgaben: Ich prüfe und ergänze.</p></li>
@@ -279,9 +344,12 @@ p{margin:0}
       </div>
     </div>
   </div>
+  <div class="abdunkeln" aria-hidden="true"></div>
 </section>
 
-<section class="ab" id="arbeitsblatt">
+<section class="ab blatt" id="arbeitsblatt">
+  <div class="riss-halter" aria-hidden="true"><div class="riss"></div></div>
+  <div class="lochung" aria-hidden="true"></div>
   <div class="rand" aria-hidden="true"></div>
   <div class="huelle">
     <h2>Einfaches digitales Arbeitsblatt</h2>
@@ -293,26 +361,29 @@ p{margin:0}
         <button role="tab" id="t-lehrer" aria-controls="p-lehrer" aria-selected="false" tabindex="-1"><strong>Was ich sehe</strong><span>Eine Matrix: wer wo steht, wer feststeckt.</span></button>
         <button role="tab" id="t-hilfe" aria-controls="p-hilfe" aria-selected="false" tabindex="-1"><strong>Wenn jemand Hilfe braucht</strong><span>Ein Tipp genügt. Meine Antwort erscheint am Rand.</span></button>
       </div>
-      <div class="fenster">
-        <div class="leiste" aria-hidden="true"><i></i><i></i><i></i><b id="adresse">einfachesab.wilski.tech/arbeitsblatt</b></div>
-        <figure class="aktiv" id="p-klasse" role="tabpanel" aria-labelledby="t-klasse" data-adresse="einfachesab.wilski.tech/arbeitsblatt">
-          <img src="assets/img/ab-schueler.webp" alt="Schüleransicht: Tabelle und Lückentext ausgefüllt, bei Aufgabe 3 ist Hilfe angefordert und ein türkiser Kommentar der Lehrkraft sichtbar" width="1800" height="1251" loading="lazy">
-          <figcaption>Alles wird automatisch gespeichert. Nach vier Stunden ohne Aktivität ist alles gelöscht.</figcaption>
-        </figure>
-        <figure id="p-lehrer" role="tabpanel" aria-labelledby="t-lehrer" data-adresse="einfachesab.wilski.tech/lehrer" hidden>
-          <img src="assets/img/ab-dashboard.webp" alt="Lehrer-Dashboard: links die Hilfe-Liste, rechts eine Matrix aller Lernenden mit Status je Aufgabe" width="1600" height="1000" loading="lazy">
-          <figcaption>Blau: bearbeitet. Rot: braucht Hilfe. Gelb: möchte vorstellen.</figcaption>
-        </figure>
-        <figure id="p-hilfe" role="tabpanel" aria-labelledby="t-hilfe" data-adresse="einfachesab.wilski.tech/lehrer" hidden>
-          <img src="assets/img/ab-kommentieren.webp" alt="Dashboard mit geöffnetem Kommentarfeld und Schnellbausteinen wie „Schau nochmal hin“" width="1800" height="1125" loading="lazy">
-          <figcaption>Kommentar schreiben, KI-Lernhilfe für diese eine Aufgabe freischalten – oder „Ich komme“.</figcaption>
-        </figure>
+      <div class="fenster-halter">
+        <div class="fenster" id="fenster">
+          <span class="klebeband" aria-hidden="true"></span>
+          <div class="leiste" aria-hidden="true"><i></i><i></i><i></i><b id="adresse">einfachesab.wilski.tech/arbeitsblatt</b></div>
+          <div class="ansichten">
+            <figure class="aktiv" id="p-klasse" role="tabpanel" aria-labelledby="t-klasse" data-adresse="einfachesab.wilski.tech/arbeitsblatt" data-text="Alles wird automatisch gespeichert. Nach vier Stunden ohne Aktivität ist alles gelöscht.">
+              <img src="assets/img/ab-schueler.webp" alt="Schüleransicht: Tabelle und Lückentext ausgefüllt, bei Aufgabe 3 ist Hilfe angefordert" width="1800" height="1251">
+            </figure>
+            <figure id="p-lehrer" role="tabpanel" aria-labelledby="t-lehrer" data-adresse="einfachesab.wilski.tech/lehrer" data-text="Blau: bearbeitet. Rot: braucht Hilfe. Gelb: möchte vorstellen.">
+              <img src="assets/img/ab-dashboard.webp" alt="Lehrer-Dashboard: links die Hilfe-Liste, rechts eine Matrix aller Lernenden mit Status je Aufgabe" width="1600" height="1000" id="dashbild">
+            </figure>
+            <figure id="p-hilfe" role="tabpanel" aria-labelledby="t-hilfe" data-adresse="einfachesab.wilski.tech/arbeitsblatt" data-text="Mein Kommentar steht in Türkis neben der Aufgabe: ein Denkanstoß, nicht die Lösung.">
+              <div class="bild"><img src="assets/img/ab-hilfe.webp" alt="Aufgabe 3 Natrium-Atom: Hilfe angefordert, daneben ein türkiser Kommentar der Lehrkraft" width="1640" height="746"><span class="kommentar-deckel" id="deckel" aria-hidden="true"></span></div>
+            </figure>
+          </div>
+          <figcaption id="bildtext">Alles wird automatisch gespeichert. Nach vier Stunden ohne Aktivität ist alles gelöscht.</figcaption>
+        </div>
       </div>
     </div>
 
     <div class="fakten">
       <div><h3>Kein Konto, keine Namen</h3><p>Pseudonym genügt. Keine Klasse, keine Speicherung über die Stunde hinaus.</p></div>
-      <div><h3>Hilfe ohne Aufstehen</h3><p>Die Antwort steht in Türkis neben der Aufgabe – klar getrennt von der Schülerarbeit.</p></div>
+      <div><h3>Hilfe ohne Aufstehen</h3><p>Ich kommentiere, schalte die KI-Lernhilfe für eine Aufgabe frei – oder komme vorbei.</p></div>
       <div><h3>Vorstellen an der Tafel</h3><p>Wer sich meldet, bringt die Aufgabe mit den eigenen Antworten an die digitale Tafel.</p></div>
     </div>
     <div class="zum-live">
@@ -322,7 +393,7 @@ p{margin:0}
   </div>
 </section>
 
-<section class="theater" id="papiertheater">
+<section class="theater blatt" id="papiertheater">
   <div class="huelle">
     <div class="kopfzeile">
       <h2>Papiertheater</h2>
@@ -330,21 +401,23 @@ p{margin:0}
     </div>
     <div class="portal" id="portal">
       <div class="guckkasten" id="guckkasten">
-        <img class="aktiv" src="assets/img/pt-0008.webp" alt="" width="1600" height="900" data-text="Willkommen im Papiertheater. Heute zeige ich euch, wie aus einer Zeichnung eine kleine Welt entsteht.">
-        <img src="assets/img/pt-0014.webp" alt="" width="1600" height="900" loading="lazy" data-text="Aus Papier falten sich Häuser, Bäume und Hügel.">
-        <img src="assets/img/pt-0030.webp" alt="" width="1600" height="900" loading="lazy" data-text="Eine Figur macht sich auf den Weg.">
-        <img src="assets/img/pt-0038.webp" alt="" width="1600" height="900" loading="lazy" data-text="Der Scheinwerfer zeigt uns, wer wichtig ist.">
-        <img src="assets/img/pt-0050.webp" alt="" width="1600" height="900" loading="lazy" data-text="Eine blaue Linie macht einen Zusammenhang sichtbar.">
-        <img src="assets/img/pt-0058.webp" alt="" width="1600" height="900" loading="lazy" data-text="Zum Schluss fassen wir zusammen, was wir gesehen haben.">
+        <img class="aktiv" src="assets/img/pt-0008.webp" alt="" width="1600" height="900" style="--kb:40% 40%" data-text="Willkommen im Papiertheater. Heute zeige ich euch, wie aus einer Zeichnung eine kleine Welt entsteht.">
+        <img src="assets/img/pt-0014.webp" alt="" width="1600" height="900" style="--kb:60% 60%" data-text="Aus Papier falten sich Häuser, Bäume und Hügel.">
+        <img src="assets/img/pt-0030.webp" alt="" width="1600" height="900" style="--kb:30% 70%" data-text="Eine Figur macht sich auf den Weg.">
+        <img src="assets/img/pt-0038.webp" alt="" width="1600" height="900" style="--kb:50% 62%" data-text="Der Scheinwerfer zeigt uns, wer wichtig ist.">
+        <img src="assets/img/pt-0050.webp" alt="" width="1600" height="900" style="--kb:70% 40%" data-text="Eine blaue Linie macht einen Zusammenhang sichtbar.">
+        <img src="assets/img/pt-0058.webp" alt="" width="1600" height="900" style="--kb:50% 45%" data-text="Zum Schluss fassen wir zusammen, was wir gesehen haben.">
         <div class="volant" aria-hidden="true"></div>
-        <div class="vorhang links" aria-hidden="true"></div>
-        <div class="vorhang rechts" aria-hidden="true"></div>
+        <div class="seitenvorhang links" aria-hidden="true"></div>
+        <div class="seitenvorhang rechts" aria-hidden="true"></div>
         <p class="untertitel" id="untertitel" aria-live="polite"></p>
-        <div class="start"><button class="knopf voll" id="vorhang-auf">Vorhang auf</button></div>
       </div>
     </div>
-    <div class="steuer">
-      <div class="szenen" id="szenen" aria-label="Szene wählen"></div>
+    <div class="steuer" id="steuer">
+      <div class="links">
+        <button class="abspielen" id="abspielen" aria-label="Szenen abspielen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path id="abspielsymbol" d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></button>
+        <div class="szenen" id="szenen" aria-label="Szene wählen"></div>
+      </div>
       <p class="hinweis">Standbilder aus der Vorlage. Der Demofilm folgt.</p>
     </div>
     <div class="drei">
@@ -355,51 +428,54 @@ p{margin:0}
   </div>
 </section>
 
-<section class="buch" id="popup-buch">
+<section class="buch blatt" id="popup-buch">
+  <div class="riss-halter" aria-hidden="true"><div class="riss"></div></div>
   <div class="huelle">
     <div class="kopfzeile">
       <h2>Das große Ägypten-Popup-Buch</h2>
       <p>Ein 3D-Buch für Klasse 5/6: blättern, an Laschen ziehen, Figuren antippen. Jede Figur, jede Kulisse und jeder Klang entsteht im Code.</p>
     </div>
-    <div class="aufschlag">
+    <div class="aufschlag" id="aufschlag">
       <img src="assets/img/buch-hero.webp" alt="Titelseite des Ägypten-Popup-Buchs mit Zeitrad, Pyramiden und schwebendem Zeitfenster" width="2400" height="1350" loading="lazy">
       <div class="ueber">
         <p>Läuft im Browser, auf dem iPad und am PC. Mit Erzählstimme, ganz ohne Internetverbindung.</p>
         <button class="knopf voll" id="buch-auf">Buch aufschlagen</button>
       </div>
     </div>
-    <div class="zahlen">
-      <div><b>9</b><span>Stationen vom Nil bis zum Stein von Rosette</span></div>
-      <div><b>113</b><span>Info-Karten zum Antippen</span></div>
-      <div><b>12</b><span>Szenen im Zeitfenster</span></div>
-      <div><b>0</b><span>Cookies und Anfragen ins Netz</span></div>
+    <div class="zahlen" id="zahlen">
+      <div><b data-zahl="9">9</b><span>Stationen vom Nil bis zum Stein von Rosette</span></div>
+      <div><b data-zahl="113">113</b><span>Info-Karten zum Antippen</span></div>
+      <div><b data-zahl="12">12</b><span>Szenen im Zeitfenster</span></div>
+      <div><b data-zahl="0">0</b><span>Cookies und Anfragen ins Netz</span></div>
     </div>
-    <div class="stationen">
+  </div>
+  <div class="querfahrt stationen" id="querfahrt">
+    <div class="huelle">
       <div class="titelzeile">
         <h3>Die neun Stationen</h3>
         <div class="pfeile"><button id="zurueck" aria-label="Vorherige Stationen"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4 6.5 10l6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button id="vor" aria-label="Nächste Stationen"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       </div>
+    </div>
+    <div class="huelle">
       <div class="band" id="band" tabindex="0" aria-label="Stationen des Buchs">
-        <article><img src="assets/img/buch-0.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">0</span>Willkommen</h3><p>Zeitrad der Sonne, 3300 bis 30 v. Chr.</p></article>
-        <article><img src="assets/img/buch-1.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">1</span>Das Geschenk des Nil</h3><p>Flut, Nilometer, Schöpfen</p></article>
-        <article><img src="assets/img/buch-2.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">2</span>Ein Pharao, zwei Länder</h3><p>Die Doppelkrone entsteht</p></article>
-        <article><img src="assets/img/buch-3.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">3</span>Die Pyramiden von Gizeh</h3><p>Bauen, Schnitt, Schlitten</p></article>
-        <article><img src="assets/img/buch-4.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">4</span>Götter und Totengericht</h3><p>Waage, Tor, Barke</p></article>
-        <article><img src="assets/img/buch-5.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">5</span>Die Mumienwerkstatt</h3><p>Natron, Tage, Kanopen – Chemie-Station</p></article>
-        <article><img src="assets/img/buch-6.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">6</span>Alltag, Schrift, Papyrus</h3><p>Schreiben, Mahlen, Senet</p></article>
-        <article><img src="assets/img/buch-7.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">7</span>Tal der Könige</h3><p>Tutanchamuns Grab</p></article>
-        <article><img src="assets/img/buch-8.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">8</span>Kleopatra und Rosette</h3><p>Drei Sprachen, Leuchtturm, Finale</p></article>
+        <article data-epoche="Willkommen" data-zeit="3300 bis 30 v. Chr."><img src="assets/img/buch-0.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">0</span>Willkommen</h3><p>Zeitrad der Sonne, 3300 bis 30 v. Chr.</p></article>
+        <article data-epoche="Vor den Pharaonen" data-zeit="bis ca. 3100 v. Chr."><img src="assets/img/buch-1.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">1</span>Das Geschenk des Nil</h3><p>Flut, Nilometer, Schöpfen</p></article>
+        <article data-epoche="Frühzeit" data-zeit="ca. 3100 bis 2650 v. Chr."><img src="assets/img/buch-2.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">2</span>Ein Pharao, zwei Länder</h3><p>Die Doppelkrone entsteht</p></article>
+        <article data-epoche="Altes Reich" data-zeit="ca. 2600 bis 2500 v. Chr."><img src="assets/img/buch-3.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">3</span>Die Pyramiden von Gizeh</h3><p>Bauen, Schnitt, Schlitten</p></article>
+        <article data-epoche="Mittleres Reich" data-zeit="ca. 2000 bis 1700 v. Chr."><img src="assets/img/buch-4.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">4</span>Götter und Totengericht</h3><p>Waage, Tor, Barke</p></article>
+        <article data-epoche="Neues Reich" data-zeit="ca. 1500 bis 1100 v. Chr."><img src="assets/img/buch-5.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">5</span>Die Mumienwerkstatt</h3><p>Natron, Tage, Kanopen – Chemie-Station</p></article>
+        <article data-epoche="Neues Reich" data-zeit="ca. 1300 bis 1100 v. Chr."><img src="assets/img/buch-6.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">6</span>Alltag, Schrift, Papyrus</h3><p>Schreiben, Mahlen, Senet</p></article>
+        <article data-epoche="Neues Reich" data-zeit="ca. 1500 bis 1200 v. Chr."><img src="assets/img/buch-7.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">7</span>Tal der Könige</h3><p>Tutanchamuns Grab</p></article>
+        <article data-epoche="Ptolemäerzeit" data-zeit="332 v. Chr. bis heute"><img src="assets/img/buch-8.webp" alt="" width="1600" height="900" loading="lazy"><h3><span class="nr">8</span>Kleopatra und Rosette</h3><p>Drei Sprachen, Leuchtturm, Finale</p></article>
       </div>
+      <div class="zeitleiste" aria-hidden="true"><b id="epoche">Willkommen</b><div class="spur"><div class="lauf" id="lauf"></div></div><span id="zeit">3300 bis 30 v. Chr.</span></div>
     </div>
   </div>
+  <div class="abdunkeln" aria-hidden="true"></div>
 </section>
-</main>
 
-<div class="leser" id="leser" role="dialog" aria-modal="true" aria-label="Das große Ägypten-Popup-Buch">
-  <div class="oben"><span>Das große Ägypten-Popup-Buch</span><span style="display:flex;gap:10px"><a class="knopf" href="buch/" target="_blank" rel="noopener">In neuem Tab</a><button class="knopf" id="buch-zu">Schließen</button></span></div>
-</div>
-
-<footer class="fuss">
+<footer class="fuss blatt">
+  <div class="riss-halter" aria-hidden="true"><div class="riss" style="background:var(--nacht)"></div></div>
   <div class="huelle">
     <p class="gross">Fragen, Ideen, Lust auf ein eigenes Thema? Sprich mich an.</p>
     <div class="zeile">
@@ -408,84 +484,23 @@ p{margin:0}
     </div>
   </div>
 </footer>
+</main>
 
-<script>
-document.documentElement.classList.add('js');
-(function(){
-  var leise = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+<div class="blende" id="blende" aria-hidden="true">
+  <div class="bahn l"></div><div class="bahn r"></div>
+  <div class="schabracke"></div>
+  <div class="titel">Vorhang auf</div>
+</div>
 
-  // Pop-up beim Laden
-  var klappen = document.querySelectorAll('.klappe');
-  requestAnimationFrame(function(){ klappen.forEach(function(k){ k.classList.add('oben'); }); });
-  // Bühne folgt der Maus ein wenig (nur nach Eingabe)
-  var buehne = document.getElementById('buehne');
-  if (!leise && window.matchMedia('(pointer:fine)').matches) {
-    document.querySelector('.hero').addEventListener('pointermove', function(e){
-      var x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
-      buehne.style.transform = 'rotateY(' + (x * 6) + 'deg) rotateX(' + (-y * 4) + 'deg)';
-    });
-  }
+<div class="leser" id="leser" role="dialog" aria-modal="true" aria-label="Das große Ägypten-Popup-Buch">
+  <div class="oben"><span>Das große Ägypten-Popup-Buch</span><span style="display:flex;gap:10px"><a class="knopf" href="buch/" target="_blank" rel="noopener">In neuem Tab</a><button class="knopf" id="buch-zu">Schließen</button></span></div>
+</div>
 
-  // Reiter Arbeitsblatt
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role=tab]'));
-  var adresse = document.getElementById('adresse');
-  function waehle(t, fokus){
-    tabs.forEach(function(x){
-      var an = x === t, p = document.getElementById(x.getAttribute('aria-controls'));
-      x.setAttribute('aria-selected', an); x.tabIndex = an ? 0 : -1;
-      p.hidden = !an; p.classList.toggle('aktiv', an);
-      if (an) adresse.textContent = p.dataset.adresse;
-    });
-    if (fokus) t.focus();
-  }
-  tabs.forEach(function(t, i){
-    t.addEventListener('click', function(){ waehle(t); });
-    t.addEventListener('keydown', function(e){
-      var n = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
-      if (n) { e.preventDefault(); waehle(tabs[(i + n + tabs.length) % tabs.length], true); }
-    });
-  });
-
-  // Papiertheater
-  var kasten = document.getElementById('guckkasten'), bilder = kasten.querySelectorAll('img'),
-      ut = document.getElementById('untertitel'), szenen = document.getElementById('szenen'), i = 0, uhr = null;
-  bilder.forEach(function(b, n){
-    var k = document.createElement('button'); k.setAttribute('aria-label', 'Szene ' + (n + 1));
-    k.addEventListener('click', function(){ zeige(n); auf(); neu(); });
-    szenen.appendChild(k);
-  });
-  function zeige(n){
-    i = n; bilder.forEach(function(b, m){ b.classList.toggle('aktiv', m === n); });
-    szenen.querySelectorAll('button').forEach(function(k, m){ k.setAttribute('aria-current', m === n); });
-    ut.textContent = bilder[n].dataset.text;
-  }
-  function neu(){ clearInterval(uhr); uhr = setInterval(function(){ zeige((i + 1) % bilder.length); }, 4200); }
-  function auf(){ document.getElementById('portal').classList.add('offen'); }
-  zeige(0); ut.textContent = '';
-  document.getElementById('vorhang-auf').addEventListener('click', function(){ auf(); zeige(0); neu(); });
-  if ('IntersectionObserver' in window) new IntersectionObserver(function(e){ if (!e[0].isIntersecting) clearInterval(uhr); }).observe(kasten);
-
-  // Stationen-Band
-  var band = document.getElementById('band');
-  function rutsch(r){ band.scrollBy({ left: r * band.clientWidth * .8, behavior: leise ? 'auto' : 'smooth' }); }
-  document.getElementById('vor').addEventListener('click', function(){ rutsch(1); });
-  document.getElementById('zurueck').addEventListener('click', function(){ rutsch(-1); });
-
-  // Buch im Leser
-  var leser = document.getElementById('leser'), zuletzt = null;
-  document.getElementById('buch-auf').addEventListener('click', function(){
-    zuletzt = document.activeElement;
-    if (!leser.querySelector('iframe')) {
-      var f = document.createElement('iframe'); f.src = 'buch/index.html'; f.title = 'Das große Ägypten-Popup-Buch'; f.allow = 'fullscreen; autoplay';
-      leser.appendChild(f);
-    }
-    leser.classList.add('offen'); document.body.style.overflow = 'hidden';
-    document.getElementById('buch-zu').focus();
-  });
-  function zu(){ leser.classList.remove('offen'); document.body.style.overflow = ''; if (zuletzt) zuletzt.focus(); }
-  document.getElementById('buch-zu').addEventListener('click', zu);
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && leser.classList.contains('offen')) zu(); });
-})();
-</script>
+<script src="assets/js/gsap.min.js"></script>
+<script src="assets/js/ScrollTrigger.min.js"></script>
+<script src="assets/js/SplitText.min.js"></script>
+<script src="assets/js/DrawSVGPlugin.min.js"></script>
+<script src="assets/js/lenis.min.js"></script>
+<script src="assets/js/seite.js"></script>
 </body>
 </html>
