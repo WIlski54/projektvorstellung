@@ -216,6 +216,19 @@
       .to(schab, { yPercent: -110, duration: 0.5, ease: 'power2.in' }, 0.7)
       .from('#papiertheater .kopfzeile', { y: 50, opacity: 0, duration: 0.6 }, 0.45);
 
+    // Papiertheater: Steuerleiste und die drei Stärken treten wie ins Rampenlicht
+    gsap.from('#steuer', { y: 30, opacity: 0, ease: 'none',
+      scrollTrigger: { trigger: '#steuer', start: 'top 96%', end: 'top 78%', scrub: 0.8 } });
+    $$('.theater .drei > div').forEach(function (d, i) {
+      var linie = document.createElement('i'); linie.className = 'linie'; linie.setAttribute('aria-hidden', 'true');
+      d.insertBefore(linie, d.firstChild);
+      var start = 94 - i * 7, ende = 62 - i * 7;
+      gsap.timeline({ scrollTrigger: { trigger: '.theater .drei', start: 'top ' + start + '%', end: 'top ' + ende + '%', scrub: 0.9 } })
+        .fromTo(linie, { scaleX: 0, opacity: 0.4 }, { scaleX: 1, opacity: 1, duration: 1, ease: 'power2.out' })
+        .from($('h3', d), { y: 46, opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.35)
+        .from($('p', d), { y: 34, opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.55);
+    });
+
     // Buch: das große Bild klappt auf, die Zahlen zählen hoch
     gsap.from('#aufschlag', { rotationX: 48, scale: 0.84, y: 110, transformPerspective: 1600, ease: 'none',
       scrollTrigger: { trigger: '#aufschlag', start: 'top bottom', end: 'top 30%', scrub: true } });
