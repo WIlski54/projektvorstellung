@@ -239,9 +239,12 @@ p{margin:0}
 /* Arbeitsblatt als Scroll-Geschichte */
 .anim .ab-raster{align-items:stretch}
 .anim .reiter{gap:0}
-.anim .reiter button{min-height:72vh;display:flex;flex-direction:column;justify-content:center;border-radius:0 12px 12px 0;opacity:.45;background:transparent;box-shadow:none}
+.anim .reiter button{min-height:72vh;display:flex;flex-direction:column;justify-content:center;border-radius:0 12px 12px 0;opacity:1;background:transparent;box-shadow:none;transition:border-color .8s ease}
+.anim .reiter button strong,.anim .reiter button span{will-change:transform,opacity}
+.anim .ansichten figure{transition:opacity .9s ease,visibility .9s}
+.anim .ab h2 .zeile{overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
 .anim .reiter button[aria-selected="true"]{opacity:1;background:transparent;box-shadow:none}
-.anim .reiter button:hover:not([aria-selected="true"]){background:transparent;opacity:.7}
+.anim .reiter button:hover:not([aria-selected="true"]){background:transparent}
 .anim .reiter button strong{font-size:clamp(26px,1.6vw + 8px,34px)}
 .anim .fenster-halter{position:sticky;top:15vh;align-self:start}
 .anim .fenster .klebeband{opacity:1}
@@ -352,7 +355,7 @@ p{margin:0}
   <div class="lochung" aria-hidden="true"></div>
   <div class="rand" aria-hidden="true"></div>
   <div class="huelle">
-    <h2>Einfaches digitales Arbeitsblatt</h2>
+    <h2 id="ab-titel">Einfaches digitales Arbeitsblatt</h2>
     <p class="einleitung">Für die Klasse sieht es aus wie ein Blatt Papier. Für mich ist es ein Fenster in den Raum: Ich sehe jede Antwort, während sie entsteht.</p>
 
     <div class="ab-raster">

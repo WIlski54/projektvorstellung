@@ -176,6 +176,24 @@
     // Arbeitsblatt: das Fenster „landet“ wie eine eingeklebte Karte
     gsap.from('#fenster', { rotationX: 56, rotationZ: -4, scale: 0.8, y: 140, transformPerspective: 1600, ease: 'none',
       scrollTrigger: { trigger: '.ab-raster', start: 'top bottom', end: 'top 25%', scrub: true } });
+    // Texte des Arbeitsblatts gleiten passend zum Scrollen herein
+    var abTitel = SplitText.create('#ab-titel', { type: 'lines', linesClass: 'zeile', mask: 'lines' });
+    gsap.from(abTitel.lines, { yPercent: 105, ease: 'none', stagger: 0.25,
+      scrollTrigger: { trigger: '#ab-titel', start: 'top 92%', end: 'top 58%', scrub: 0.8 } });
+    gsap.from('.ab .einleitung', { y: 40, opacity: 0, ease: 'none',
+      scrollTrigger: { trigger: '.ab .einleitung', start: 'top 92%', end: 'top 64%', scrub: 0.8 } });
+    tabs.forEach(function (t) {
+      var teile = [$('strong', t), $('span', t)];
+      gsap.timeline({ scrollTrigger: { trigger: t, start: 'top 88%', end: 'bottom 12%', scrub: 0.9 } })
+        .fromTo(teile, { y: 70, opacity: 0.12 }, { y: 0, opacity: 1, duration: 1, stagger: 0.18, ease: 'power1.out' })
+        .to(teile, { y: 0, opacity: 1, duration: 0.9 })
+        .to(teile, { y: -50, opacity: 0.18, duration: 1, stagger: 0.12, ease: 'power1.in' });
+    });
+    $$('.ab .fakten > div, .ab .zum-live').forEach(function (el, i) {
+      gsap.from(el, { y: 60, opacity: 0, ease: 'none',
+        scrollTrigger: { trigger: i < 3 ? '.ab .fakten' : el, start: 'top ' + (95 - (i % 3) * 6) + '%', end: 'top ' + (62 - (i % 3) * 6) + '%', scrub: 0.8 } });
+    });
+
     // … und die drei Schritte steuern die Ansicht
     tabs.forEach(function (t) {
       ScrollTrigger.create({ trigger: t, start: 'top center', end: 'bottom center',
