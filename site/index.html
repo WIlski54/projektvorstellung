@@ -136,14 +136,27 @@ p{margin:0}
 .ansichten #p-hilfe{background:#fff;display:grid;place-items:center}
 .ansichten #p-hilfe .bild{position:relative;width:94%}
 .ansichten #p-hilfe img{height:auto;object-fit:contain}
-.kommentar-deckel{position:absolute;left:81.4%;top:47%;width:18.6%;height:48%;background:#fff;transform-origin:50% 100%;transform:scaleY(0)}
+.kommentar-deckel{position:absolute;left:80.2%;top:50.6%;width:19.4%;height:27.6%;background:#fff;transform-origin:50% 100%;transform:scaleY(0)}
 .fenster figcaption{position:relative;padding:14px 18px;font-size:15px;color:#55607A;border-top:1px solid #E6EAF1;background:#fff;min-height:3.4em}
 .ab .fakten{margin-top:72px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
 .ab .fakten h3{font-size:clamp(21px,1.2vw + 10px,25px)}
 .ab .fakten p{margin-top:8px;color:#3A4560}
 .ab .zum-live{margin-top:56px;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center}
 .ab .zum-live .knopf{color:var(--tinte)}
-.ab .zum-live p{color:#4A5570;font-size:.95em;max-width:52ch}
+.ab .zum-live p{color:#4A5570;font-size:.95em;max-width:52ch;margin-top:14px}
+.ab .zum-live .live-text{flex:1 1 300px}
+.film-karte{position:relative;flex:0 1 380px;padding:0;border:0;border-radius:14px;overflow:hidden;cursor:pointer;background:var(--tinte);
+  box-shadow:0 18px 40px -18px rgba(21,23,28,.55),0 2px 6px rgba(21,23,28,.18);transform:rotate(-1.2deg);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.film-karte img{display:block;width:100%;height:auto;opacity:.82;transition:opacity .35s}
+.film-karte:hover,.film-karte:focus-visible{transform:rotate(0) translateY(-3px);box-shadow:0 26px 50px -20px rgba(21,23,28,.6),0 2px 6px rgba(21,23,28,.2)}
+.film-karte:hover img{opacity:.95}
+.film-play{position:absolute;left:50%;top:42%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;display:grid;place-items:center;
+  background:var(--ab,#2F5FD0);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.35);padding-left:3px;transition:transform .35s}
+.film-karte:hover .film-play{transform:scale(1.08)}
+.film-text{position:absolute;left:0;right:0;bottom:0;padding:28px 18px 14px;text-align:left;color:#F4F1EA;
+  background:linear-gradient(transparent,rgba(21,23,28,.88));display:flex;flex-direction:column;gap:2px;font:400 14px/1.3 var(--text)}
+.film-text strong{font:760 20px/1.1 var(--display);font-stretch:84%}
+.kino video{flex:1;min-height:0;width:100%;background:#000;object-fit:contain}
 
 /* ---------- Papiertheater ---------- */
 .theater{background:var(--buehne);padding:clamp(96px,11vw,150px) 0;z-index:4}
@@ -395,16 +408,16 @@ p{margin:0}
       <div class="fenster-halter">
         <div class="fenster" id="fenster">
           <span class="klebeband" aria-hidden="true"></span>
-          <div class="leiste" aria-hidden="true"><i></i><i></i><i></i><b id="adresse">einfachesab.wilski.tech/arbeitsblatt</b></div>
+          <div class="leiste" aria-hidden="true"><i></i><i></i><i></i><b id="adresse">stoffe-trennen.wilski.tech/arbeitsblatt</b></div>
           <div class="ansichten">
-            <figure class="aktiv" id="p-klasse" role="tabpanel" aria-labelledby="t-klasse" data-adresse="einfachesab.wilski.tech/arbeitsblatt" data-text="Alles wird automatisch gespeichert. Nach vier Stunden ohne Aktivität ist alles gelöscht.">
-              <img src="assets/img/ab-schueler.webp" alt="Schüleransicht: Tabelle und Lückentext ausgefüllt, bei Aufgabe 3 ist Hilfe angefordert" width="1800" height="1251">
+            <figure class="aktiv" id="p-klasse" role="tabpanel" aria-labelledby="t-klasse" data-adresse="stoffe-trennen.wilski.tech/arbeitsblatt" data-text="Alles wird automatisch gespeichert. Nach vier Stunden ohne Aktivität ist alles gelöscht.">
+              <img src="assets/img/ab-schueler.webp" alt="Schüleransicht des Arbeitsblatts „Stoffe trennen“: Aufgabe 1, Reinstoff oder Gemisch, ist angekreuzt" width="1800" height="1250">
             </figure>
-            <figure id="p-lehrer" role="tabpanel" aria-labelledby="t-lehrer" data-adresse="einfachesab.wilski.tech/lehrer" data-text="Blau: bearbeitet. Rot: braucht Hilfe. Gelb: möchte vorstellen.">
-              <img src="assets/img/ab-dashboard.webp" alt="Lehrer-Dashboard: links die Hilfe-Liste, rechts eine Matrix aller Lernenden mit Status je Aufgabe" width="1600" height="1000" id="dashbild">
+            <figure id="p-lehrer" role="tabpanel" aria-labelledby="t-lehrer" data-adresse="stoffe-trennen.wilski.tech/lehrer" data-text="Blau: bearbeitet. Rot: braucht Hilfe. Gelb: möchte vorstellen.">
+              <img src="assets/img/ab-dashboard.webp" alt="Lehrer-Dashboard: links Hilfe- und Vorstellen-Liste, rechts eine Matrix aller Lernenden mit Status je Aufgabe" width="1600" height="1000" id="dashbild">
             </figure>
-            <figure id="p-hilfe" role="tabpanel" aria-labelledby="t-hilfe" data-adresse="einfachesab.wilski.tech/arbeitsblatt" data-text="Mein Kommentar steht in Türkis neben der Aufgabe: ein Denkanstoß, nicht die Lösung.">
-              <div class="bild"><img src="assets/img/ab-hilfe.webp" alt="Aufgabe 3 Natrium-Atom: Hilfe angefordert, daneben ein türkiser Kommentar der Lehrkraft" width="1640" height="746"><span class="kommentar-deckel" id="deckel" aria-hidden="true"></span></div>
+            <figure id="p-hilfe" role="tabpanel" aria-labelledby="t-hilfe" data-adresse="stoffe-trennen.wilski.tech/arbeitsblatt" data-text="Mein Kommentar steht in Türkis neben der Aufgabe: ein Denkanstoß, nicht die Lösung.">
+              <div class="bild"><img src="assets/img/ab-hilfe.webp" alt="Aufgabe 5, Lenas Versuch: Hilfe angefordert, daneben ein türkiser Kommentar der Lehrkraft" width="1688" height="724"><span class="kommentar-deckel" id="deckel" aria-hidden="true"></span></div>
             </figure>
           </div>
           <figcaption id="bildtext">Alles wird automatisch gespeichert. Nach vier Stunden ohne Aktivität ist alles gelöscht.</figcaption>
@@ -418,8 +431,15 @@ p{margin:0}
       <div><h3>Vorstellen an der Tafel</h3><p>Wer sich meldet, bringt die Aufgabe mit den eigenen Antworten an die digitale Tafel.</p></div>
     </div>
     <div class="zum-live">
-      <a class="knopf" href="https://einfachesab.wilski.tech" rel="noopener">Live-Version öffnen</a>
-      <p>Zum Ausprobieren: mit einem beliebigen Pseudonym anmelden. Das Beispiel zeigt die Vorlage „Atombau und Periodensystem“.</p>
+      <button class="film-karte" id="film-auf" type="button" aria-haspopup="dialog">
+        <img src="assets/img/ab-film-poster.webp" alt="" width="1280" height="720" loading="lazy">
+        <span class="film-play" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></span>
+        <span class="film-text"><strong>Demofilm ansehen</strong><span>Eine Stunde in einer Minute</span></span>
+      </button>
+      <div class="live-text">
+        <a class="knopf" href="https://stoffe-trennen.wilski.tech" rel="noopener">Live-Version öffnen</a>
+        <p>Zum Ausprobieren: mit einem beliebigen Pseudonym anmelden. Das Beispiel ist das Demo-Arbeitsblatt „Stoffe trennen“ (Naturwissenschaften, Klasse 6).</p>
+      </div>
     </div>
   </div>
 </section>
@@ -539,6 +559,13 @@ p{margin:0}
     </div>
     <div class="innen"></div>
   </div>
+</div>
+
+<div class="leser kino" id="kino" role="dialog" aria-modal="true" aria-label="Demofilm: Einfaches digitales Arbeitsblatt">
+  <div class="oben"><span>Demofilm: Einfaches digitales Arbeitsblatt „Stoffe trennen“</span><button class="knopf" id="film-zu">Schließen</button></div>
+  <video id="film" controls playsinline preload="none" poster="assets/img/ab-film-poster.webp">
+    <source src="assets/video/demofilm-stoffe-trennen.mp4" type="video/mp4">
+  </video>
 </div>
 
 <div class="leser" id="leser" role="dialog" aria-modal="true" aria-label="Das große Ägypten-Popup-Buch">

@@ -39,7 +39,7 @@
       // Aus der roten Zelle ins Schülerblatt hineinzoomen
       gsap.killTweensOf(dashbild);
       gsap.timeline()
-        .to(dashbild, { scale: 2.8, transformOrigin: '68% 24%', duration: 0.6, ease: 'power2.in' })
+        .to(dashbild, { scale: 2.8, transformOrigin: '88.6% 47.8%', duration: 0.6, ease: 'power2.in' })
         .add(function () { zeigeAnsicht(t); })
         .fromTo('#p-hilfe .bild', { scale: 1.18 }, { scale: 1, duration: 0.8, ease: 'power3.out' })
         .set(dashbild, { scale: 1 }, '+=0.3');
@@ -124,6 +124,21 @@
   function zu() { leser.classList.remove('offen'); document.body.style.overflow = ''; if (lenis) lenis.start(); if (zuletzt) zuletzt.focus(); }
   $('#buch-zu').addEventListener('click', zu);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && leser.classList.contains('offen')) zu(); });
+
+  /* ---------- Arbeitsblatt: Demofilm ---------- */
+  var kino = $('#kino'), film = $('#film'), vorFilm = null;
+  $('#film-auf').addEventListener('click', function () {
+    vorFilm = document.activeElement;
+    kino.classList.add('offen'); document.body.style.overflow = 'hidden'; if (lenis) lenis.stop();
+    $('#film-zu').focus();
+    var p = film.play(); if (p && p.catch) p.catch(function () {});
+  });
+  function filmZu() {
+    film.pause(); kino.classList.remove('offen'); document.body.style.overflow = ''; if (lenis) lenis.start();
+    if (vorFilm) vorFilm.focus();
+  }
+  $('#film-zu').addEventListener('click', filmZu);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && kino.classList.contains('offen')) filmZu(); });
 
   /* ================= Ab hier: Bewegung ================= */
   if (!window.gsap || leise) return;
