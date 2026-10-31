@@ -227,17 +227,19 @@
       var linie = document.createElement('i'); linie.className = 'linie'; linie.setAttribute('aria-hidden', 'true');
       d.insertBefore(linie, d.firstChild);
     });
-    var oeffnen = gsap.timeline({ scrollTrigger: { trigger: '#papiertheater', start: 'top top', end: imVorhang ? '+=150%' : '+=70%', scrub: 0.6, pin: true,
-        onUpdate: function (s) { if (s.progress > (imVorhang ? 0.45 : 0.7) && !gestartet) spiele(); } } })
-      .to(vtitel, { opacity: 0, scale: 0.94, duration: 0.18, ease: 'none' }, 0)
-      .to(bahnL, { xPercent: -102, scaleX: 0.75, transformOrigin: 'left center', duration: 1, ease: 'sine.inOut' }, 0.04)
-      .to(bahnR, { xPercent: 102, scaleX: 0.75, transformOrigin: 'right center', duration: 1, ease: 'sine.inOut' }, 0.04)
-      .to(schab, { yPercent: -110, duration: 0.45, ease: 'sine.in' }, 0.6)
-      .from('#papiertheater .kopfzeile', { y: 50, opacity: 0, filter: 'blur(8px)', duration: 0.5, ease: 'power1.out' }, 0.35);
+    // Zeitplan: kurz geschlossen stehen (0–0,3), langsam öffnen (0,3–1,9), Schabracke hebt sich, danach erst die Blöcke
+    var oeffnen = gsap.timeline({ scrollTrigger: { trigger: '#papiertheater', start: 'top top', end: imVorhang ? '+=240%' : '+=130%', scrub: 0.8, pin: true,
+        onUpdate: function (s) { if (s.progress > (imVorhang ? 0.55 : 0.8) && !gestartet) spiele(); } } })
+      .to({}, { duration: 0.3 }, 0)
+      .to(vtitel, { opacity: 0, scale: 0.94, duration: 0.3, ease: 'none' }, 0.2)
+      .to(bahnL, { xPercent: -102, scaleX: 0.75, transformOrigin: 'left center', duration: 1.6, ease: 'sine.inOut' }, 0.3)
+      .to(bahnR, { xPercent: 102, scaleX: 0.75, transformOrigin: 'right center', duration: 1.6, ease: 'sine.inOut' }, 0.3)
+      .to(schab, { yPercent: -110, duration: 0.6, ease: 'sine.in' }, 1.4)
+      .from('#papiertheater .kopfzeile', { y: 50, opacity: 0, filter: 'blur(8px)', duration: 0.6, ease: 'power1.out' }, 1.0);
     if (imVorhang) {
-      oeffnen.fromTo('#steuer', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'power1.out' }, 1.25);
+      oeffnen.fromTo('#steuer', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'power1.out' }, 2.25);
       dreiBloecke.forEach(function (d, i) {
-        var t0 = 1.45 + i * 0.3;
+        var t0 = 2.45 + i * 0.3;
         oeffnen.fromTo($('.linie', d), { scaleX: 0, opacity: 0.3 }, { scaleX: 1, opacity: 1, duration: 0.35, ease: 'power2.out' }, t0)
           .fromTo($('h3', d), { y: 70, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.4, ease: 'power2.out' }, t0 + 0.1)
           .fromTo($('p', d), { y: 50, opacity: 0, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.4, ease: 'power2.out' }, t0 + 0.2);
