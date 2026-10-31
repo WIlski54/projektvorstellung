@@ -191,7 +191,7 @@
     });
     $$('.ab .fakten > div, .ab .zum-live').forEach(function (el, i) {
       gsap.from(el, { y: 60, opacity: 0, ease: 'none',
-        scrollTrigger: { trigger: i < 3 ? '.ab .fakten' : el, start: 'top ' + (95 - (i % 3) * 6) + '%', end: 'top ' + (62 - (i % 3) * 6) + '%', scrub: 0.8 } });
+        scrollTrigger: { trigger: i < 3 ? '.ab .fakten' : el, start: 'top ' + (98 - (i % 3) * 5) + '%', end: 'top ' + (74 - (i % 3) * 5) + '%', scrub: 0.8 } });
     });
 
     // … und die drei Schritte steuern die Ansicht
@@ -222,7 +222,7 @@
     $$('.theater .drei > div').forEach(function (d, i) {
       var linie = document.createElement('i'); linie.className = 'linie'; linie.setAttribute('aria-hidden', 'true');
       d.insertBefore(linie, d.firstChild);
-      gsap.timeline({ scrollTrigger: { trigger: d, pinnedContainer: '#papiertheater', start: 'top ' + (100 - i * 6) + '%', end: 'top ' + (48 - i * 6) + '%', scrub: 1.2 } })
+      gsap.timeline({ scrollTrigger: { trigger: d, pinnedContainer: '#papiertheater', start: 'top ' + (100 - i * 5) + '%', end: 'top ' + (72 - i * 5) + '%', scrub: 1 } })
         .fromTo(linie, { scaleX: 0, opacity: 0.3 }, { scaleX: 1, opacity: 1, duration: 1, ease: 'power2.out' }, 0)
         .fromTo($('h3', d), { y: 90, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'power2.out' }, 0.25)
         .fromTo($('p', d), { y: 70, opacity: 0, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'power2.out' }, 0.5);
