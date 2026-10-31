@@ -188,6 +188,9 @@ p{margin:0}
 @keyframes szenenlauf{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .szenen button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .theater .hinweis{font-size:15px;color:var(--nacht-leise)}
+.theater .film-knopf{color:#F6E9CF;font-size:.95rem;padding:.8em 1.2em}
+.theater .film-knopf .leise{font-weight:400;opacity:.7}
+.theater .film-knopf:hover{background:rgba(255,255,255,.1)}
 .theater .drei{margin-top:72px;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
 .theater .drei div{border-top:3px solid #F08A6E;padding-top:22px}
 .anim .theater .drei div{border-top:0;padding-top:0}
@@ -358,7 +361,7 @@ p{margin:0}
       <div class="buehne" id="buehne">
         <a class="klappe k1" href="#arbeitsblatt"><span class="klebeband"></span><img src="assets/img/ab-dashboard.webp" alt="Lehrer-Dashboard des einfachen digitalen Arbeitsblatts" width="1600" height="1000"><span class="zettel">Arbeitsblatt</span></a>
         <a class="klappe k2" href="#popup-buch"><span class="klebeband"></span><img src="assets/img/buch-hero.webp" alt="Das große Ägypten-Popup-Buch, aufgeschlagen" width="2400" height="1350"><span class="zettel">Popup-Buch</span></a>
-        <a class="klappe k3" href="#papiertheater"><span class="klebeband"></span><img src="assets/img/pt-0038.webp" alt="Papiertheater-Szene mit Scheinwerfer auf einer Papierfigur" width="1600" height="900"><span class="zettel">Papiertheater</span></a>
+        <a class="klappe k3" href="#papiertheater"><span class="klebeband"></span><img src="assets/img/pt-salz-3.webp" alt="Papiertheater „Salz aus dem Meer“: Scheinwerfer auf der Salzbäuerin am Tor" width="1600" height="900"><span class="zettel">Papiertheater</span></a>
       </div>
     </div>
   </div>
@@ -431,7 +434,7 @@ p{margin:0}
       <div><h3>Vorstellen an der Tafel</h3><p>Wer sich meldet, bringt die Aufgabe mit den eigenen Antworten an die digitale Tafel.</p></div>
     </div>
     <div class="zum-live">
-      <button class="film-karte" id="film-auf" type="button" aria-haspopup="dialog">
+      <button class="film-karte" type="button" aria-haspopup="dialog" data-film="assets/video/demofilm-stoffe-trennen.mp4" data-poster="assets/img/ab-film-poster.webp" data-titel="Demofilm: Einfaches digitales Arbeitsblatt „Stoffe trennen“">
         <img src="assets/img/ab-film-poster.webp" alt="" width="1280" height="720" loading="lazy">
         <span class="film-play" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></span>
         <span class="film-text"><strong>Demofilm ansehen</strong><span>Eine Stunde in einer Minute</span></span>
@@ -452,12 +455,12 @@ p{margin:0}
     </div>
     <div class="portal" id="portal">
       <div class="guckkasten" id="guckkasten">
-        <img class="aktiv" src="assets/img/pt-0008.webp" alt="" width="1600" height="900" style="--kb:40% 40%" data-text="Willkommen im Papiertheater. Heute zeige ich euch, wie aus einer Zeichnung eine kleine Welt entsteht.">
-        <img src="assets/img/pt-0014.webp" alt="" width="1600" height="900" style="--kb:60% 60%" data-text="Aus Papier falten sich Häuser, Bäume und Hügel.">
-        <img src="assets/img/pt-0030.webp" alt="" width="1600" height="900" style="--kb:30% 70%" data-text="Eine Figur macht sich auf den Weg.">
-        <img src="assets/img/pt-0038.webp" alt="" width="1600" height="900" style="--kb:50% 62%" data-text="Der Scheinwerfer zeigt uns, wer wichtig ist.">
-        <img src="assets/img/pt-0050.webp" alt="" width="1600" height="900" style="--kb:70% 40%" data-text="Eine blaue Linie macht einen Zusammenhang sichtbar.">
-        <img src="assets/img/pt-0058.webp" alt="" width="1600" height="900" style="--kb:50% 45%" data-text="Zum Schluss fassen wir zusammen, was wir gesehen haben.">
+        <img class="aktiv" src="assets/img/pt-salz-1.webp" alt="" width="1600" height="900" style="--kb:60% 40%" data-text="Habt ihr schon einmal Meerwasser geschmeckt? Es ist salzig. Aber wie kommt das Salz in unseren Salzstreuer?">
+        <img src="assets/img/pt-salz-2.webp" alt="" width="1600" height="900" style="--kb:55% 50%" data-text="Im Meerwasser ist Salz gelöst. Die winzigen Salzteilchen verteilen sich zwischen den Wasserteilchen.">
+        <img src="assets/img/pt-salz-3.webp" alt="" width="1600" height="900" style="--kb:35% 35%" data-text="Bei Flut öffnen die Salzbauern ein Tor. Der Scheinwerfer zeigt, wer gemeint ist.">
+        <img src="assets/img/pt-salz-4.webp" alt="" width="1600" height="900" style="--kb:50% 50%" data-text="Sonne und Wind arbeiten: Das Wasser verdunstet, das Salz bleibt im Becken zurück.">
+        <img src="assets/img/pt-salz-5.webp" alt="" width="1600" height="900" style="--kb:60% 45%" data-text="Nach einigen Wochen schieben die Salzbauern die Kristalle mit Holzrechen zu Haufen.">
+        <img src="assets/img/pt-salz-6.webp" alt="" width="1600" height="900" style="--kb:65% 55%" data-text="Die Sonne macht dasselbe wie wir beim Eindampfen im Labor.">
         <div class="volant" aria-hidden="true"></div>
         <div class="seitenvorhang links" aria-hidden="true"></div>
         <div class="seitenvorhang rechts" aria-hidden="true"></div>
@@ -469,7 +472,7 @@ p{margin:0}
         <button class="abspielen" id="abspielen" aria-label="Szenen abspielen"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path id="abspielsymbol" d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></button>
         <div class="szenen" id="szenen" aria-label="Szene wählen"></div>
       </div>
-      <p class="hinweis">Standbilder aus der Vorlage. Der Demofilm folgt.</p>
+      <button class="knopf film-knopf" type="button" aria-haspopup="dialog" data-film="assets/video/salz-aus-dem-meer.mp4" data-poster="assets/img/pt-film-poster.webp" data-titel="Papiertheater: „Salz aus dem Meer“ (Naturwissenschaften, Klasse 6)"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg> Ganzen Film ansehen <span class="leise">2 Min.</span></button>
     </div>
     <div class="drei">
       <div><h3>Drehbuch zuerst</h3><p>Szenen und Sprechtext bekomme ich zur Freigabe, bevor gebaut wird.</p></div>
@@ -561,11 +564,9 @@ p{margin:0}
   </div>
 </div>
 
-<div class="leser kino" id="kino" role="dialog" aria-modal="true" aria-label="Demofilm: Einfaches digitales Arbeitsblatt">
-  <div class="oben"><span>Demofilm: Einfaches digitales Arbeitsblatt „Stoffe trennen“</span><button class="knopf" id="film-zu">Schließen</button></div>
-  <video id="film" controls playsinline preload="none" poster="assets/img/ab-film-poster.webp">
-    <source src="assets/video/demofilm-stoffe-trennen.mp4" type="video/mp4">
-  </video>
+<div class="leser kino" id="kino" role="dialog" aria-modal="true" aria-labelledby="film-titel">
+  <div class="oben"><span id="film-titel">Demofilm</span><button class="knopf" id="film-zu">Schließen</button></div>
+  <video id="film" controls playsinline preload="none"></video>
 </div>
 
 <div class="leser" id="leser" role="dialog" aria-modal="true" aria-label="Das große Ägypten-Popup-Buch">

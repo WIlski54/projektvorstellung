@@ -127,11 +127,15 @@
 
   /* ---------- Arbeitsblatt: Demofilm ---------- */
   var kino = $('#kino'), film = $('#film'), vorFilm = null;
-  $('#film-auf').addEventListener('click', function () {
-    vorFilm = document.activeElement;
-    kino.classList.add('offen'); document.body.style.overflow = 'hidden'; if (lenis) lenis.stop();
-    $('#film-zu').focus();
-    var p = film.play(); if (p && p.catch) p.catch(function () {});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-film]'), function (k) {
+    k.addEventListener('click', function () {
+      vorFilm = k;
+      if (film.getAttribute('src') !== k.dataset.film) { film.setAttribute('src', k.dataset.film); film.setAttribute('poster', k.dataset.poster || ''); }
+      $('#film-titel').textContent = k.dataset.titel || 'Film';
+      kino.classList.add('offen'); document.body.style.overflow = 'hidden'; if (lenis) lenis.stop();
+      $('#film-zu').focus();
+      var p = film.play(); if (p && p.catch) p.catch(function () {});
+    });
   });
   function filmZu() {
     film.pause(); kino.classList.remove('offen'); document.body.style.overflow = ''; if (lenis) lenis.start();
