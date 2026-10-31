@@ -176,22 +176,34 @@
     // Arbeitsblatt: das Fenster „landet“ wie eine eingeklebte Karte
     gsap.from('#fenster', { rotationX: 56, rotationZ: -4, scale: 0.8, y: 140, transformPerspective: 1600, ease: 'none',
       scrollTrigger: { trigger: '.ab-raster', start: 'top bottom', end: 'top 25%', scrub: true } });
-    // Texte des Arbeitsblatts gleiten passend zum Scrollen herein
+    // Sanftes Einblenden über eine lange Scrollstrecke – fertig erst auf Lesehöhe
+    function einblenden(el, o) {
+      o = o || {};
+      return gsap.fromTo(el, { y: o.y || 70, opacity: 0, filter: 'blur(' + (o.blur || 10) + 'px)' },
+        { y: 0, opacity: 1, filter: 'blur(0px)', ease: 'power1.out', stagger: o.stagger || 0,
+          scrollTrigger: { trigger: o.trigger || el, pinnedContainer: o.pin, start: o.start || 'top 96%', end: o.end || 'top 42%', scrub: 1 } });
+    }
     var abTitel = SplitText.create('#ab-titel', { type: 'lines', linesClass: 'zeile', mask: 'lines' });
-    gsap.from(abTitel.lines, { yPercent: 105, ease: 'none', stagger: 0.25,
-      scrollTrigger: { trigger: '#ab-titel', start: 'top 92%', end: 'top 58%', scrub: 0.8 } });
-    gsap.from('.ab .einleitung', { y: 40, opacity: 0, ease: 'none',
-      scrollTrigger: { trigger: '.ab .einleitung', start: 'top 92%', end: 'top 64%', scrub: 0.8 } });
+    gsap.from(abTitel.lines, { yPercent: 110, ease: 'power1.out', stagger: 0.3,
+      scrollTrigger: { trigger: '#ab-titel', start: 'top 96%', end: 'top 30%', scrub: 1 } });
+    einblenden('.ab .einleitung', { start: 'top 98%', end: 'top 38%' });
+    // Ablauf: Überschrift und Text
+    einblenden('.ablauf .kopfzeile h2', { start: 'top 96%', end: 'top 40%', pin: '#ablauf-inhalt' });
+    einblenden('.ablauf .kopfzeile p', { start: 'top 98%', end: 'top 45%', pin: '#ablauf-inhalt' });
+    // Schluss
+    einblenden('.fuss .gross', { start: 'top 95%', end: 'top 45%' });
+    einblenden('.fuss .zeile', { start: 'top 100%', end: 'top 75%', y: 30, blur: 6 });
+
     tabs.forEach(function (t) {
       var teile = [$('strong', t), $('span', t)];
-      gsap.timeline({ scrollTrigger: { trigger: t, start: 'top 88%', end: 'bottom 12%', scrub: 0.9 } })
-        .fromTo(teile, { y: 70, opacity: 0.12 }, { y: 0, opacity: 1, duration: 1, stagger: 0.18, ease: 'power1.out' })
-        .to(teile, { y: 0, opacity: 1, duration: 0.9 })
-        .to(teile, { y: -50, opacity: 0.18, duration: 1, stagger: 0.12, ease: 'power1.in' });
+      gsap.timeline({ scrollTrigger: { trigger: t, start: 'top 95%', end: 'bottom 5%', scrub: 1 } })
+        .fromTo(teile, { y: 90, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.25, ease: 'power1.out' })
+        .to(teile, { y: 0, opacity: 1, duration: 0.6 })
+        .to(teile, { y: -60, opacity: 0.12, filter: 'blur(6px)', duration: 1, stagger: 0.12, ease: 'power1.in' });
     });
     $$('.ab .fakten > div, .ab .zum-live').forEach(function (el, i) {
-      gsap.from(el, { y: 60, opacity: 0, ease: 'none',
-        scrollTrigger: { trigger: i < 3 ? '.ab .fakten' : el, start: 'top ' + (98 - (i % 3) * 5) + '%', end: 'top ' + (74 - (i % 3) * 5) + '%', scrub: 0.8 } });
+      gsap.from(el, { y: 70, opacity: 0, filter: 'blur(10px)', ease: 'power1.out',
+        scrollTrigger: { trigger: i < 3 ? '.ab .fakten' : el, start: 'top ' + (i < 3 ? 98 - i * 5 : 100) + '%', end: 'top ' + (i < 3 ? 50 - i * 5 : 52) + '%', scrub: 1 } });
     });
 
     // … und die drei Schritte steuern die Ansicht
@@ -208,13 +220,13 @@
       .to(bahnL, { xPercent: 0, duration: 1, ease: 'power1.inOut' }, 0)
       .to(bahnR, { xPercent: 0, duration: 1, ease: 'power1.inOut' }, 0)
       .to(vtitel, { opacity: 1, duration: 0.25 }, 0.75);
-    gsap.timeline({ scrollTrigger: { trigger: '#papiertheater', start: 'top top', end: '+=90%', scrub: true, pin: true,
-        onUpdate: function (s) { if (s.progress > 0.75 && !gestartet) spiele(); } } })
-      .to(vtitel, { opacity: 0, scale: 0.92, duration: 0.25 }, 0)
-      .to(bahnL, { xPercent: -102, scaleX: 0.7, transformOrigin: 'left center', duration: 1, ease: 'power2.in' }, 0.15)
-      .to(bahnR, { xPercent: 102, scaleX: 0.7, transformOrigin: 'right center', duration: 1, ease: 'power2.in' }, 0.15)
-      .to(schab, { yPercent: -110, duration: 0.5, ease: 'power2.in' }, 0.7)
-      .from('#papiertheater .kopfzeile', { y: 50, opacity: 0, duration: 0.6 }, 0.45);
+    gsap.timeline({ scrollTrigger: { trigger: '#papiertheater', start: 'top top', end: '+=70%', scrub: 0.6, pin: true,
+        onUpdate: function (s) { if (s.progress > 0.7 && !gestartet) spiele(); } } })
+      .to(vtitel, { opacity: 0, scale: 0.94, duration: 0.18, ease: 'none' }, 0)
+      .to(bahnL, { xPercent: -102, scaleX: 0.75, transformOrigin: 'left center', duration: 1, ease: 'sine.inOut' }, 0.04)
+      .to(bahnR, { xPercent: 102, scaleX: 0.75, transformOrigin: 'right center', duration: 1, ease: 'sine.inOut' }, 0.04)
+      .to(schab, { yPercent: -110, duration: 0.45, ease: 'sine.in' }, 0.6)
+      .from('#papiertheater .kopfzeile', { y: 50, opacity: 0, filter: 'blur(8px)', duration: 0.5, ease: 'power1.out' }, 0.35);
 
     // Papiertheater: Steuerleiste und die drei Stärken treten wie ins Rampenlicht
     gsap.from('#steuer', { y: 30, opacity: 0, ease: 'none',
