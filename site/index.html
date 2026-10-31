@@ -242,6 +242,7 @@ p{margin:0}
 .aufschlag .ueber{position:absolute;inset:auto 0 0 0;padding:clamp(20px,4vw,48px);display:flex;flex-wrap:wrap;gap:18px 32px;align-items:end;justify-content:space-between;
   background:linear-gradient(180deg,rgba(26,12,7,0),rgba(26,12,7,.88) 55%);color:#F6E9CF}
 .aufschlag .ueber p{max-width:40ch}
+.buch-knoepfe{display:flex;flex-wrap:wrap;gap:12px}
 .zahlen{margin-top:56px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
 .zahlen b{display:block;font-family:var(--display);font-weight:800;font-stretch:76%;font-size:clamp(56px,6vw,92px);line-height:.9;color:var(--nil);font-variant-numeric:tabular-nums}
 .zahlen span{display:block;margin-top:8px;color:#5B3F22}
@@ -502,7 +503,10 @@ p{margin:0}
       <img src="assets/img/buch-hero.webp" alt="Titelseite des Ägypten-Popup-Buchs mit Zeitrad, Pyramiden und schwebendem Zeitfenster" width="2400" height="1350" loading="lazy">
       <div class="ueber">
         <p>Läuft im Browser, auf dem iPad und am PC. Mit Erzählstimme, ganz ohne Internetverbindung.</p>
-        <button class="knopf voll" id="buch-auf">Buch aufschlagen</button>
+        <div class="buch-knoepfe">
+          <button class="knopf voll" id="buch-auf">Buch aufschlagen</button>
+          <a class="knopf" href="https://aegypten-ab.wilski.tech" rel="noopener">Arbeitsblatt zum Buch</a>
+        </div>
       </div>
     </div>
     <div class="zahlen" id="zahlen">
