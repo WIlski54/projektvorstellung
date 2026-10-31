@@ -194,16 +194,18 @@
     einblenden('.fuss .gross', { start: 'top 95%', end: 'top 45%' });
     einblenden('.fuss .zeile', { start: 'top 100%', end: 'top 75%', y: 30, blur: 6 });
 
-    tabs.forEach(function (t) {
-      var teile = [$('strong', t), $('span', t)];
-      gsap.timeline({ scrollTrigger: { trigger: t, start: 'top 95%', end: 'bottom 5%', scrub: 1 } })
-        .fromTo(teile, { y: 90, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.25, ease: 'power1.out' })
-        .to(teile, { y: 0, opacity: 1, duration: 0.6 })
-        .to(teile, { y: -60, opacity: 0.12, filter: 'blur(6px)', duration: 1, stagger: 0.12, ease: 'power1.in' });
+    tabs.forEach(function (t, i) {
+      var teile = [$('strong', t), $('span', t)], letzter = i === tabs.length - 1;
+      var tl = gsap.timeline({ scrollTrigger: { trigger: t, start: 'top 95%', end: letzter ? 'center 55%' : 'bottom 5%', scrub: 1 } })
+        .fromTo(teile, { y: 90, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, stagger: 0.25, ease: 'power1.out' });
+      if (!letzter) {
+        tl.to(teile, { y: 0, opacity: 1, duration: 0.6 })
+          .to(teile, { y: -60, opacity: 0.12, filter: 'blur(6px)', duration: 1, stagger: 0.12, ease: 'power1.in' });
+      }
     });
     $$('.ab .fakten > div, .ab .zum-live').forEach(function (el, i) {
       gsap.from(el, { y: 70, opacity: 0, filter: 'blur(10px)', ease: 'power1.out',
-        scrollTrigger: { trigger: i < 3 ? '.ab .fakten' : el, start: 'top ' + (i < 3 ? 98 - i * 5 : 100) + '%', end: 'top ' + (i < 3 ? 50 - i * 5 : 52) + '%', scrub: 1 } });
+        scrollTrigger: { trigger: i < 3 ? '.ab .fakten' : el, start: 'top ' + (i < 3 ? 100 - i * 3 : 100) + '%', end: 'top ' + (i < 3 ? 80 - i * 3 : 86) + '%', scrub: 0.6 } });
     });
 
     // … und die drei Schritte steuern die Ansicht
