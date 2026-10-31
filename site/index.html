@@ -194,6 +194,26 @@ p{margin:0}
   background:radial-gradient(circle at 50% 0,#A52A24 0 62%,transparent 64%) 0 0/90px 100% repeat-x,linear-gradient(#8E201C,#8E201C) 0 0/100% 60% no-repeat;filter:drop-shadow(0 10px 10px rgba(0,0,0,.45))}
 .blende .titel{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:780;font-stretch:76%;font-size:clamp(48px,7vw,120px);color:#F6E3C6;opacity:0;text-shadow:0 4px 30px rgba(0,0,0,.45)}
 
+/* Buchdeckel als Übergang (nur mit Animation) */
+.buchblende{position:fixed;inset:0;z-index:61;pointer-events:none;display:none;perspective:2400px;perspective-origin:0% 50%}
+.anim .buchblende{display:block}
+.deckel{position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d;visibility:hidden}
+.deckel .vorne,.deckel .innen{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.deckel .vorne{display:grid;place-items:center;text-align:center;color:#E9C46A;
+  background:linear-gradient(90deg,#2A1309 0,#4A230F 2.2%,#2A1309 3.6%,rgba(0,0,0,0) 3.7%),
+    radial-gradient(120% 90% at 55% 45%,#7A4322 0%,#5A2E17 55%,#3A1B0C 100%);
+  box-shadow:inset -30px 0 60px rgba(0,0,0,.35)}
+.deckel .rahmen{position:absolute;top:5vh;bottom:5vh;left:calc(3.6% + 4vw);right:4vw;border:3px solid #C9A04A;border-radius:8px;box-shadow:inset 0 0 0 10px rgba(201,160,74,.12),inset 0 0 0 13px #C9A04A55}
+.deckel .sonne{width:clamp(90px,10vw,150px);height:auto;margin:0 auto 2.4vh;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
+.deckel .buchtitel{font-family:var(--display);font-weight:800;font-stretch:78%;font-size:clamp(48px,6.6vw,112px);line-height:.95;letter-spacing:-.01em;
+  background:linear-gradient(180deg,#F6DE93 0%,#D9AE4E 55%,#A9792A 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 rgba(40,18,6,.7))}
+.deckel .buchunter{margin-top:2.4vh;font-size:clamp(16px,1.3vw,22px);color:#E2C37A;letter-spacing:.04em}
+.deckel .innen{transform:rotateY(180deg);
+  background:radial-gradient(circle at 20% 30%,rgba(140,90,40,.18) 0 18%,transparent 19%) 0 0/120px 120px,
+    radial-gradient(circle at 70% 70%,rgba(21,94,104,.16) 0 14%,transparent 15%) 0 0/90px 90px,#EAD8AE;
+  box-shadow:inset 40px 0 60px rgba(0,0,0,.18)}
+.deckel .schatten{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+
 /* ---------- Popup-Buch ---------- */
 .buch{background:var(--sand);color:var(--erde);padding:clamp(96px,11vw,150px) 0 clamp(80px,9vw,130px);z-index:5}
 .buch .riss{background:var(--sand)}
@@ -436,9 +456,9 @@ p{margin:0}
 
 <section class="buch blatt" id="popup-buch">
   <div class="riss-halter" aria-hidden="true"><div class="riss"></div></div>
-  <div class="huelle">
+  <div class="huelle" id="buch-kopf">
     <div class="kopfzeile">
-      <h2>Das große Ägypten-Popup-Buch</h2>
+      <h2 id="buch-titel">Das große Ägypten-Popup-Buch</h2>
       <p>Ein 3D-Buch für Klasse 5/6: blättern, an Laschen ziehen, Figuren antippen. Jede Figur, jede Kulisse und jeder Klang entsteht im Code.</p>
     </div>
     <div class="aufschlag" id="aufschlag">
@@ -458,7 +478,7 @@ p{margin:0}
   <div class="querfahrt stationen" id="querfahrt">
     <div class="huelle">
       <div class="titelzeile">
-        <h3>Die neun Stationen</h3>
+        <h3 id="stationen-titel">Die neun Stationen</h3>
         <div class="pfeile"><button id="zurueck" aria-label="Vorherige Stationen"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4 6.5 10l6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button id="vor" aria-label="Nächste Stationen"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       </div>
     </div>
@@ -496,6 +516,24 @@ p{margin:0}
   <div class="bahn l"></div><div class="bahn r"></div>
   <div class="schabracke"></div>
   <div class="titel">Vorhang auf</div>
+</div>
+
+<div class="buchblende" id="buchblende" aria-hidden="true">
+  <div class="deckel" id="deckel-buch">
+    <div class="vorne">
+      <div class="rahmen"></div>
+      <div>
+        <svg class="sonne" viewBox="0 0 120 80" aria-hidden="true"><defs><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6DE93"/><stop offset="1" stop-color="#B8862F"/></linearGradient></defs>
+          <path d="M60 18c-12 0-20 9-20 20s8 20 20 20 20-9 20-20-8-20-20-20z" fill="url(#gold)"/>
+          <path d="M38 40C26 30 12 30 2 36c10 2 18 6 24 12 4-4 8-6 12-8zM82 40c12-10 26-10 36-4-10 2-18 6-24 12-4-4-8-6-12-8z" fill="url(#gold)"/>
+          <path d="M52 62h16l-3 14h-10z" fill="url(#gold)" opacity=".8"/></svg>
+        <div class="buchtitel">Das große<br>Ägypten-Popup-Buch</div>
+        <div class="buchunter">Neun Stationen vom Nil bis Kleopatra</div>
+      </div>
+      <div class="schatten"></div>
+    </div>
+    <div class="innen"></div>
+  </div>
 </div>
 
 <div class="leser" id="leser" role="dialog" aria-modal="true" aria-label="Das große Ägypten-Popup-Buch">

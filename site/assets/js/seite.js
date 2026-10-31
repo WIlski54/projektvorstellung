@@ -229,9 +229,30 @@
         .from($('p', d), { y: 34, opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.55);
     });
 
+    // Buch: Ein Buchdeckel schiebt sich über die Bühne und klappt auf – dahinter stellt sich die Seite auf
+    var deckel = $('#deckel-buch'), deckelSchatten = $('.schatten', deckel);
+    gsap.set(deckel, { yPercent: 105, rotationX: 22, scale: 0.9, transformOrigin: 'left center', visibility: 'visible' });
+    gsap.timeline({ scrollTrigger: { trigger: '#popup-buch', start: 'top bottom', end: 'top top', scrub: true } })
+      .to(deckel, { yPercent: 0, rotationX: 0, scale: 1, duration: 1, ease: 'power2.out' });
+    var buchTitel = SplitText.create('#buch-titel', { type: 'lines', linesClass: 'zeile' });
+    var mische = function (a, b) { return Object.assign({}, b, a); };
+    var aufklappen = { rotationX: 86, opacity: 0, transformOrigin: '50% 100%', transformPerspective: 1200 };
+    gsap.timeline({ scrollTrigger: { trigger: '#popup-buch', start: 'top top', end: '+=130%', scrub: 0.8, pin: '#buch-kopf' } })
+      .to(deckel, { rotationY: -178, duration: 1, ease: 'power1.inOut' }, 0)
+      .to(deckelSchatten, { opacity: 0.55, duration: 0.5, ease: 'none' }, 0)
+      .set(deckel, { autoAlpha: 0 }, 0.99)
+      .from(buchTitel.lines, mische({ duration: 0.45, stagger: 0.12, ease: 'back.out(1.6)' }, aufklappen), 0.42)
+      .from('#popup-buch .kopfzeile p', mische({ duration: 0.4, ease: 'back.out(1.4)' }, aufklappen), 0.62)
+      .from('#aufschlag', { rotationX: 80, transformOrigin: '50% 100%', transformPerspective: 1800, duration: 0.6, ease: 'back.out(1.2)' }, 0.7)
+      .from('#aufschlag .ueber > *', { y: 30, opacity: 0, duration: 0.3, stagger: 0.1 }, 1.15);
+    $$('#zahlen > div').forEach(function (d, i) {
+      gsap.from(d, mische({ ease: 'back.out(1.5)',
+        scrollTrigger: { trigger: '#zahlen', start: 'top ' + (96 - i * 5) + '%', end: 'top ' + (70 - i * 5) + '%', scrub: 0.8 } }, aufklappen));
+    });
+    gsap.from('#stationen-titel', mische({ ease: 'back.out(1.5)',
+      scrollTrigger: { trigger: '#querfahrt', start: 'top 92%', end: 'top 55%', scrub: 0.8 } }, aufklappen));
+
     // Buch: das große Bild klappt auf, die Zahlen zählen hoch
-    gsap.from('#aufschlag', { rotationX: 48, scale: 0.84, y: 110, transformPerspective: 1600, ease: 'none',
-      scrollTrigger: { trigger: '#aufschlag', start: 'top bottom', end: 'top 30%', scrub: true } });
     $$('#zahlen b').forEach(function (b) {
       var ziel = +b.dataset.zahl, obj = { v: 0 };
       if (!ziel) return;
